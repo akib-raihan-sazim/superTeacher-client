@@ -1,0 +1,141 @@
+.formBody {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px;
+  color: #4caf50;
+  border-radius: 8px;
+}
+
+.group-name {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.fieldWrapper {
+  flex: 1;
+  max-width: calc(33.333% - 7px);
+}
+
+.fieldWrapperPass {
+  flex: 1;
+  max-width: calc(50% - 7px);
+}
+
+.input {
+  width: 100%;
+}
+
+.title {
+  text-align: center;
+  color: #4caf50;
+  font-size: 24px;
+  margin-bottom: 24px;
+}
+
+.input {
+  background-color: #ffffff;
+  border-color: #2c3e50;
+}
+
+.label {
+  color: #4caf50;
+  margin-bottom: 8px;
+}
+
+.selectItem {
+  color: #333;
+}
+
+.addressField {
+  flex: 1;
+  max-width: calc(60%);
+}
+
+.phoneField {
+  flex: 1;
+  max-width: calc(40%);
+}
+
+.buttonGroup {
+  display: flex;
+  justify-content: center;
+  gap: 10rem;
+  margin-top: 20px;
+}
+
+.buttonReset {
+  background-color: #9e9e9e;
+  color: #fff;
+}
+
+.buttonSubmit {
+  background-color: #4caf50;
+  color: #fff;
+}
+
+.link {
+  color: #4caf50;
+  text-align: center;
+  margin-top: 30px;
+}
+
+.link a {
+  color: #f5e6e6;
+  text-decoration: none;
+}
+
+.link a:hover {
+  text-decoration: underline;
+}
+
+.register {
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  color: #f5e6e6;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 15px;
+    margin: 0;
+  }
+  .form {
+    width: 100%;
+  }
+  .group-name {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .fieldWrapper {
+    max-width: 100%;
+  }
+  .fieldWrapperPass {
+    max-width: 100%;
+  }
+
+  .addressField {
+    max-width: 100%;
+  }
+
+  .phoneField {
+    max-width: 100%;
+  }
+
+  .addressField {
+    width: 100%;
+  }
+
+  .buttonGroup {
+    gap: 50px;
+  }
+}
