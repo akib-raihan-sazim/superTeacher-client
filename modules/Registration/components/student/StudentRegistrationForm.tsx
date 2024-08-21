@@ -3,6 +3,8 @@ import React from "react";
 import { TextInput, Select, PasswordInput, Button, Box, Group, Stack } from "@mantine/core";
 import { useForm, Controller } from "react-hook-form";
 
+import { EEducationLevel } from "@/shared/typedefs";
+
 import styles from "./StudentRegistraionForm.module.css";
 import {
   CLASS_OPTIONS,
@@ -105,8 +107,8 @@ export function StudentRegistrationForm({ onSubmit }: IStudentRegistrationFormPr
                   label: styles["label"],
                   root: styles["phoneField"],
                 }}
-                {...register("phoneNumber")}
-                error={errors.phoneNumber?.message}
+                {...register("phoneNo")}
+                error={errors.phoneNo?.message}
                 required
               />
             </div>
@@ -142,9 +144,10 @@ export function StudentRegistrationForm({ onSubmit }: IStudentRegistrationFormPr
                   />
                 )}
               />
-              {(educationLevel === "School" || educationLevel === "College") && (
+              {(educationLevel === EEducationLevel.SCHOOL ||
+                educationLevel === EEducationLevel.COLLEGE) && (
                 <Controller
-                  name="englishBanglaMedium"
+                  name="medium"
                   control={control}
                   render={({ field }) => (
                     <Select
@@ -155,14 +158,14 @@ export function StudentRegistrationForm({ onSubmit }: IStudentRegistrationFormPr
                         { value: "english", label: "English" },
                         { value: "bangla", label: "Bangla" },
                       ]}
-                      error={errors.englishBanglaMedium?.message}
+                      error={errors.medium?.message}
                       required
                       {...field}
                     />
                   )}
                 />
               )}
-              {educationLevel === "University" && (
+              {educationLevel === EEducationLevel.UNIVERSITY && (
                 <Controller
                   name="degreeType"
                   control={control}
@@ -184,7 +187,8 @@ export function StudentRegistrationForm({ onSubmit }: IStudentRegistrationFormPr
               )}
             </Group>
 
-            {(educationLevel === "School" || educationLevel === "College") && (
+            {(educationLevel === EEducationLevel.SCHOOL ||
+              educationLevel === EEducationLevel.COLLEGE) && (
               <Controller
                 name="class"
                 control={control}
@@ -202,7 +206,7 @@ export function StudentRegistrationForm({ onSubmit }: IStudentRegistrationFormPr
               />
             )}
 
-            {educationLevel === "University" && (
+            {educationLevel === EEducationLevel.UNIVERSITY && (
               <>
                 <Controller
                   name="degreeName"
