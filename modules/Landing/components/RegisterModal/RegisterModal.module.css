@@ -1,0 +1,23 @@
+.title {
+  text-align: center;
+}
+
+.flexContainer {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.roleBox {
+  display: flex;
+  width: 40%;
+  height: 45vh;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid;
+  cursor: pointer;
+}
+
+.roleBox:hover {
+  background-color: #f0f0f0;
+}

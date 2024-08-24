@@ -5,7 +5,6 @@ import { Provider as ReduxProvider } from "react-redux";
 
 import AppInitializer from "@/shared/components/wrappers/AppInitializer";
 import { store } from "@/shared/redux/store";
-import { appTheme } from "@/shared/themes/themes";
 import { TCustomAppProps } from "@/shared/typedefs";
 
 export default function App(props: TCustomAppProps) {
@@ -21,7 +20,17 @@ export default function App(props: TCustomAppProps) {
 
   return (
     <ReduxProvider store={store}>
-      <MantineProvider withGlobalStyles withNormalizeCSS theme={appTheme}>
+      <MantineProvider
+        withGlobalStyles
+        withNormalizeCSS
+        theme={{
+          colorScheme: "light",
+          colors: {
+            navy: ["#1B2440"],
+            green: ["#4CAF50"],
+          },
+        }}
+      >
         <ModalsProvider>
           <AppInitializer>
             <Notifications />
