@@ -3,6 +3,7 @@ import { z } from "zod";
 
 export const TeacherFormSchema = z
   .object({
+    uniqueCode: z.string().min(1, "Code is required"),
     firstName: z
       .string()
       .min(1, "First name is required")
@@ -57,20 +58,20 @@ export const TeacherFormSchema = z
 export const TeacherRegistrationSchemaResolver = zodResolver(TeacherFormSchema);
 
 export interface ITeacherFormValues {
-  code?: string;
+  uniqueCode?: string;
+  firstName: string;
+  lastName: string;
+  gender: string;
   email: string;
   password: string;
   confirmPassword: string;
   majorSubject: string;
   highestEducationLevel: string;
   subjectsToTeach: string[];
-  gender: string;
-  firstName: string;
-  lastName: string;
 }
 
 export const TeacherRegistrationFormInitialValues: ITeacherFormValues = {
-  code: "",
+  uniqueCode: "",
   email: "",
   password: "",
   confirmPassword: "",
