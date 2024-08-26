@@ -71,3 +71,24 @@ export type TTeacherRegistrationResponse = {
   token: string;
   codeUsage: number;
 };
+
+export interface ILoginResponse {
+  user: {
+    id: number;
+    createdAt: string;
+    updatedAt: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    password: string;
+    userType: string;
+    student: number | null;
+    teacher: number | null;
+  };
+  token: string;
+}
+
+export interface ILoginFormValues {
+  email: string;
+  password: string;
+}
