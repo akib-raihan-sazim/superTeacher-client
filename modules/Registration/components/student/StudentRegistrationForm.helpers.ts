@@ -3,7 +3,7 @@ import { z } from "zod";
 
 import { TStudentRegistrationFormData } from "./StudentRegistrationForm.types";
 
-const educationLevelEnum = z.enum(["School", "College", "University"]);
+const educationLevelEnum = z.enum(["school", "college", "university"]);
 const degreeTypeEnum = z.enum(["Bachelors", "Masters"]);
 
 export const studentRegistrationSchema = z
@@ -12,12 +12,12 @@ export const studentRegistrationSchema = z
     lastName: z.string().min(1, "Last name is required"),
     gender: z.string().min(1, "Gender is required"),
     email: z.string().email("Invalid email"),
-    phoneNumber: z.string().min(1, "Phone number is required"),
+    phoneNo: z.string().min(1, "Phone number is required"),
     address: z.string().min(1, "Address is required"),
     educationLevel: educationLevelEnum,
     password: z.string().min(6, "Password must be at least 6 characters"),
     confirmPassword: z.string(),
-    englishBanglaMedium: z.string().optional(),
+    medium: z.string().optional(),
     class: z.string().optional(),
     degreeType: degreeTypeEnum.optional(),
     degreeName: z.string().optional(),
@@ -28,7 +28,7 @@ export const studentRegistrationSchema = z
     path: ["confirmPassword"],
   })
   .superRefine((data, ctx) => {
-    if (data.educationLevel === "School" || data.educationLevel === "College") {
+    if (data.educationLevel === "school" || data.educationLevel === "college") {
       if (!data.class) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
@@ -36,16 +36,16 @@ export const studentRegistrationSchema = z
           message: "Class is required for School or College",
         });
       }
-      if (!data.englishBanglaMedium) {
+      if (!data.medium) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          path: ["englishBanglaMedium"],
+          path: ["medium"],
           message: "Medium is required for School or College",
         });
       }
     }
 
-    if (data.educationLevel === "University") {
+    if (data.educationLevel === "university") {
       if (!data.degreeType) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
@@ -77,12 +77,12 @@ export const defaultValues: TStudentRegistrationFormData = {
   lastName: "",
   gender: "",
   email: "",
-  phoneNumber: "",
+  phoneNo: "",
   address: "",
   educationLevel: undefined,
   password: "",
   confirmPassword: "",
-  englishBanglaMedium: undefined,
+  medium: undefined,
   class: undefined,
   degreeType: undefined,
   degreeName: undefined,

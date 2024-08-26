@@ -3,12 +3,12 @@ export type TStudentRegistrationFormData = {
   lastName: string;
   gender: string;
   email: string;
-  phoneNumber: string;
+  phoneNo: string;
   address: string;
-  educationLevel?: "School" | "College" | "University";
+  educationLevel?: "school" | "college" | "university";
   password: string;
   confirmPassword: string;
-  englishBanglaMedium?: string;
+  medium?: string;
   class?: string;
   degreeType?: "Bachelors" | "Masters";
   degreeName?: string;

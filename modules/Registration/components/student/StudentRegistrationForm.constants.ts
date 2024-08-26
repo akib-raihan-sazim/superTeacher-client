@@ -1,3 +1,5 @@
+import { EEducationLevel } from "@/shared/typedefs";
+
 export const CLASS_OPTIONS = [
   { value: "1", label: "Class 1" },
   { value: "2", label: "Class 2" },
@@ -14,9 +16,9 @@ export const DEGREE_OPTIONS = [
 ];
 
 export const EDUCATION_LEVEL_OPTIONS = [
-  { value: "School", label: "School" },
-  { value: "College", label: "College" },
-  { value: "University", label: "University" },
+  { value: EEducationLevel.SCHOOL, label: "School" },
+  { value: EEducationLevel.COLLEGE, label: "College" },
+  { value: EEducationLevel.UNIVERSITY, label: "University" },
 ];
 
 export const GENDER_OPTIONS = [

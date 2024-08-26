@@ -4,3 +4,9 @@ export enum EDateFormat {
   SHORT_WITH_TIME = "MMM DD, YYYY, h:mm a",
   LONG_WITH_TIME = "MMMM DD, YYYY, h:mm a",
 }
+
+export enum EEducationLevel {
+  SCHOOL = "school",
+  COLLEGE = "college",
+  UNIVERSITY = "university",
+}

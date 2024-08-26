@@ -1,7 +1,12 @@
 import { TApiResponse } from "@/shared/typedefs";
 
 import projectApi from "../api.config";
-import { TLoginRequestFields, TLoginResponse } from "./auth.types";
+import {
+  TLoginRequestFields,
+  TLoginResponse,
+  TStudentRegistrationFields,
+  TStudentRegistrationResponse,
+} from "./auth.types";
 
 const authApi = projectApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -13,8 +18,15 @@ const authApi = projectApi.injectEndpoints({
       }),
       transformResponse: (response: TApiResponse<TLoginResponse>) => response.data,
     }),
+    registerStudent: builder.mutation<TStudentRegistrationResponse, TStudentRegistrationFields>({
+      query: (data) => ({
+        url: "auth/register/student",
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
   overrideExisting: false,
 });
 
-export const { useLoginMutation } = authApi;
+export const { useLoginMutation, useRegisterStudentMutation } = authApi;
