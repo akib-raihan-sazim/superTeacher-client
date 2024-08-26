@@ -1,4 +1,4 @@
-import { MantineProvider } from "@mantine/core";
+import { MantineProvider, Global } from "@mantine/core";
 import { ModalsProvider } from "@mantine/modals";
 import { Notifications } from "@mantine/notifications";
 import { Provider as ReduxProvider } from "react-redux";
@@ -26,11 +26,19 @@ export default function App(props: TCustomAppProps) {
         theme={{
           colorScheme: "light",
           colors: {
-            navy: ["#1B2440"],
+            navy: ["#151d35"],
             green: ["#4CAF50"],
           },
+          primaryColor: "navy",
         }}
       >
+        <Global
+          styles={(theme) => ({
+            body: {
+              backgroundColor: theme.colors["navy"],
+            },
+          })}
+        />
         <ModalsProvider>
           <AppInitializer>
             <Notifications />
