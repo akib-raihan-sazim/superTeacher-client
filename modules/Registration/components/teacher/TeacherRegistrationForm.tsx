@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { Button, Group, Box, Flex, Text, Grid, Anchor } from "@mantine/core";
 import { useForm } from "react-hook-form";
 import { MultiSelect, TextInput, Select, PasswordInput } from "react-hook-form-mantine";
+
+import RegisterModal from "@/modules/Landing/components/RegisterModal/RegisterModal";
 
 import {
   ITeacherFormValues,
@@ -26,6 +28,7 @@ const TeacherRegistrationForm: React.FC<IExtendedTeacherRegistrationFormProps> =
     defaultValues: TeacherRegistrationFormInitialValues,
     resolver: TeacherRegistrationSchemaResolver,
   });
+  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
 
   const getUniqueCodeError = () => {
     if (errors.uniqueCode) {
@@ -37,14 +40,16 @@ const TeacherRegistrationForm: React.FC<IExtendedTeacherRegistrationFormProps> =
     return undefined;
   };
 
+  const openRegisterModal = () => {
+    setIsRegisterModalOpen(true);
+  };
+
+  const closeRegisterModal = () => {
+    setIsRegisterModalOpen(false);
+  };
+
   return (
-    <Flex
-      justify="center"
-      align="center"
-      direction="column"
-      style={{ minHeight: "100vh" }}
-      m={"lg"}
-    >
+    <Flex justify="center" align="center" direction="column" style={{ minHeight: "100vh" }}>
       <Text my={"2.5rem"} align="center" fw={700} c="#4CAF50" size={"2rem"}>
         REGISTER AS TEACHER
       </Text>
@@ -253,12 +258,18 @@ const TeacherRegistrationForm: React.FC<IExtendedTeacherRegistrationFormProps> =
         </form>
 
         <Text fw={400} c="#4CAF50" ta={"center"} size="md" mt={"lg"}>
-          Already have an account? <Anchor c="white">Login</Anchor>
+          Already have an account?{" "}
+          <Anchor c="white" href="/login">
+            Login
+          </Anchor>
         </Text>
 
         <Text fw={400} c="#4CAF50" ta={"center"} size="md">
-          <Anchor c="white">Register</Anchor>
+          <Anchor c="white" onClick={openRegisterModal}>
+            Register
+          </Anchor>
         </Text>
+        <RegisterModal opened={isRegisterModalOpen} close={closeRegisterModal} />
       </Box>
     </Flex>
   );

@@ -21,3 +21,14 @@
 .roleBox:hover {
   background-color: #f0f0f0;
 }
+
+@media (max-width: 768px) {
+  .flexContainer {
+    display: block;
+  }
+
+  .roleBox {
+    margin-bottom: 2em;
+    width: 100%;
+  }
+}

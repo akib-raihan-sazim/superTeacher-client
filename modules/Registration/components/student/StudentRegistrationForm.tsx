@@ -41,7 +41,7 @@ export function StudentRegistrationForm({ onSubmit }: IStudentRegistrationFormPr
   };
 
   return (
-    <div className={styles["formBody"]}>
+    <div>
       <Box className={styles["container"]}>
         <form onSubmit={handleSubmit(onSubmit)} className={styles["form"]}>
           <div className={styles["title"]}>REGISTER AS A STUDENT</div>
@@ -277,11 +277,8 @@ export function StudentRegistrationForm({ onSubmit }: IStudentRegistrationFormPr
           </Group>
 
           <Box className={styles["link"]}>
-            Already have an account? <a href="#">Login</a>
+            Already have an account? <a href="/login">Login</a>
           </Box>
-          <a href="#" className={styles["register"]}>
-            Register
-          </a>
         </form>
       </Box>
     </div>

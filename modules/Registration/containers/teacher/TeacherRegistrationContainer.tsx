@@ -31,7 +31,7 @@ const TeacherRegistrationContainer: React.FC = () => {
       console.error("Registration failed:", error);
       const apiError = error as APIError;
       if (apiError.data && apiError.data.message) {
-        if (apiError.data.message.includes("Unique code")) {
+        if (apiError.data.message.includes("unique code")) {
           setUniqueCodeError({
             message: apiError.data.message,
             remainingUses: apiError.data.remainingUses ?? 0,

@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { Anchor, Box, Button, Flex, Group, SimpleGrid, Text } from "@mantine/core";
 import { useForm } from "react-hook-form";
 import { TextInput, PasswordInput } from "react-hook-form-mantine";
+
+import RegisterModal from "@/modules/Landing/components/RegisterModal/RegisterModal";
 
 import { LoginFormSchemaResolver, loginFormDefaultValues } from "./LoginForm.helpers";
 import { ILoginFormProps, ILoginFormValues } from "./LoginForm.types";
@@ -16,9 +18,18 @@ const LoginForm: React.FC<ILoginFormProps> = ({ onSubmit }) => {
     defaultValues: loginFormDefaultValues,
     resolver: LoginFormSchemaResolver,
   });
+  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
+
+  const openRegisterModal = () => {
+    setIsRegisterModalOpen(true);
+  };
+
+  const closeRegisterModal = () => {
+    setIsRegisterModalOpen(false);
+  };
 
   return (
-    <Flex justify="center" align="center" direction="column" style={{ minHeight: "100vh" }} m="lg">
+    <Flex justify="center" align="center" direction="column" style={{ minHeight: "100vh" }}>
       <Text my={20} fw={700} tt="uppercase" c="#4CAF50" size="xl">
         Login
       </Text>
@@ -68,8 +79,12 @@ const LoginForm: React.FC<ILoginFormProps> = ({ onSubmit }) => {
         </Text>
 
         <Text fw={400} c="#4CAF50" ta="center" size="md" mt="xl">
-          Don&apos;t have an account? <Anchor c="white">Register</Anchor>
+          Don&apos;t have an account?{" "}
+          <Anchor c="white" onClick={openRegisterModal}>
+            Register
+          </Anchor>
         </Text>
+        <RegisterModal opened={isRegisterModalOpen} close={closeRegisterModal} />
       </Box>
     </Flex>
   );
