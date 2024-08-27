@@ -9,11 +9,14 @@ import {
   TeacherRegistrationFormInitialValues,
   TeacherRegistrationSchemaResolver,
 } from "./TeacherRegistrationForm.helpers";
-import { ITeacherRegistrationFormProps } from "./TeacherRegistrationForm.type";
+import { IExtendedTeacherRegistrationFormProps } from "./TeacherRegistrationForm.type";
 
 export const Subjects = ["Physics", "Chemistry", "Math", "Geography", "Communication"];
 
-const TeacherRegistrationForm: React.FC<ITeacherRegistrationFormProps> = ({ onSubmit }) => {
+const TeacherRegistrationForm: React.FC<IExtendedTeacherRegistrationFormProps> = ({
+  onSubmit,
+  uniqueCodeError,
+}) => {
   const {
     formState: { errors },
     handleSubmit,
@@ -23,6 +26,17 @@ const TeacherRegistrationForm: React.FC<ITeacherRegistrationFormProps> = ({ onSu
     defaultValues: TeacherRegistrationFormInitialValues,
     resolver: TeacherRegistrationSchemaResolver,
   });
+
+  const getUniqueCodeError = () => {
+    if (errors.uniqueCode) {
+      return errors.uniqueCode.message;
+    }
+    if (uniqueCodeError) {
+      return `${uniqueCodeError.message}. Remaining: ${uniqueCodeError.remainingUses})`;
+    }
+    return undefined;
+  };
+
   return (
     <Flex
       justify="center"
@@ -44,12 +58,13 @@ const TeacherRegistrationForm: React.FC<ITeacherRegistrationFormProps> = ({ onSu
                 placeholder="Enter unique code"
                 withAsterisk
                 control={control}
-                name="code"
+                name="uniqueCode"
                 styles={{
                   label: {
                     color: "#4CAF50",
                   },
                 }}
+                error={getUniqueCodeError()}
               />
             </Grid.Col>
 

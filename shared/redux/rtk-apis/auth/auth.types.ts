@@ -1,3 +1,5 @@
+import { ITeacherFormValues } from "@/modules/Registration/components/teacher/TeacherRegistrationForm.helpers";
+
 export type TLoginRequestFields = {
   email: string;
   password: string;
@@ -40,4 +42,32 @@ export type TStudentRegistrationFields = {
 export type TStudentRegistrationResponse = {
   accessToken: string;
   user: TTokenizedUser;
+};
+
+export type TTeacherRegistrationFields = Omit<ITeacherFormValues, "confirmPassword"> & {
+  userType?: "teacher";
+};
+
+export type TTeacher = {
+  id: number;
+  createdAt: string;
+  updatedAt: string;
+  highestEducationLevel: string;
+  majorSubject: string;
+  subjectsToTeach: string[];
+  user: {
+    id: number;
+    createdAt: string;
+    updatedAt: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    userType: string;
+  };
+};
+
+export type TTeacherRegistrationResponse = {
+  teacher: TTeacher;
+  token: string;
+  codeUsage: number;
 };
