@@ -1,7 +1,11 @@
 import React from "react";
 
-import { notifications } from "@mantine/notifications";
+import { useRouter } from "next/router";
 
+import { notifications } from "@mantine/notifications";
+import { useDispatch } from "react-redux";
+
+import { setToken, setUser } from "@/shared/redux/reducers/auth.reducer";
 import { useLoginMutation } from "@/shared/redux/rtk-apis/auth/auth.api";
 import { ILoginFormValues } from "@/shared/redux/rtk-apis/auth/auth.types";
 
@@ -10,11 +14,14 @@ import { ApiError } from "./LoginContainer.types";
 
 const LoginContainer = () => {
   const [login] = useLoginMutation();
+  const dispatch = useDispatch();
+  const router = useRouter();
 
   const handleSubmit = async (data: ILoginFormValues) => {
     try {
       const result = await login(data).unwrap();
-
+      dispatch(setUser(result.user));
+      dispatch(setToken(result.token));
       localStorage.setItem("authToken", result.token);
 
       notifications.show({
@@ -22,8 +29,7 @@ const LoginContainer = () => {
         message: "Login successful!",
         color: "blue",
       });
-
-      // TODO Redirect based on user type
+      router.push(`/dashboard/${result.user.userType}`);
     } catch (error) {
       console.error("Login failed:", error);
 

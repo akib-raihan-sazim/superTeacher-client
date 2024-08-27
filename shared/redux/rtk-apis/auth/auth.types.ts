@@ -40,7 +40,7 @@ export type TStudentRegistrationFields = {
 };
 
 export type TStudentRegistrationResponse = {
-  accessToken: string;
+  token: string;
   user: TTokenizedUser;
 };
 
@@ -48,28 +48,21 @@ export type TTeacherRegistrationFields = Omit<ITeacherFormValues, "confirmPasswo
   userType?: "teacher";
 };
 
-export type TTeacher = {
-  id: number;
+export type TUser = {
   createdAt: string;
   updatedAt: string;
-  highestEducationLevel: string;
-  majorSubject: string;
-  subjectsToTeach: string[];
-  user: {
-    id: number;
-    createdAt: string;
-    updatedAt: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-    userType: string;
-  };
+  firstName: string;
+  lastName: string;
+  email: string;
+  userType: string;
+  student: null | number;
+  teacher: null | number;
+  id: number;
 };
 
 export type TTeacherRegistrationResponse = {
-  teacher: TTeacher;
+  user: TUser;
   token: string;
-  codeUsage: number;
 };
 
 export interface ILoginResponse {
