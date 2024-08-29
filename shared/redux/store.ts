@@ -1,7 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query/react";
 
-import authReducer from "./reducers/auth.reducer";
 import authenticatedUserSliceReducer from "./reducers/user.reducer";
 import projectApi from "./rtk-apis/api.config";
 
@@ -9,7 +8,6 @@ export const store = configureStore({
   reducer: {
     authenticatedUser: authenticatedUserSliceReducer,
     [projectApi.reducerPath]: projectApi.reducer,
-    auth: authReducer,
   },
 
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(projectApi.middleware),
