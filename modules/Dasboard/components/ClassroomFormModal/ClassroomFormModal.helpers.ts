@@ -18,3 +18,14 @@ export const ClassroomFormDefaultValues: ClassroomFormData = {
   class_time: "",
   days: [],
 };
+
+export type ClassroomApiResponse = {
+  id: string;
+} & ClassroomFormData;
+
+export type CreateClassroomRequest = {
+  title: string;
+  subject: string;
+  class_time: string;
+  days: string[];
+};
