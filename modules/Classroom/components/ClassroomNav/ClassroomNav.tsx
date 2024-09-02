@@ -1,0 +1,37 @@
+import React from "react";
+
+import { Tabs, Title } from "@mantine/core";
+
+import StreamContainer from "../../containers/StreamContainer/StreamContainer";
+import { useStyles } from "./ClassroomNav.styles";
+
+const ClassroomNav = () => {
+  const { classes } = useStyles();
+
+  return (
+    <Tabs defaultValue="stream" mx={"auto"} maw={"97%"}>
+      <Tabs.List grow className={classes.tabsList} mx={{ base: 0, xs: "xs", sm: "md", md: "xl" }}>
+        <Tabs.Tab value="stream" className={classes.tab}>
+          <Title order={5} className={classes.tabTitle}>
+            Stream
+          </Title>
+        </Tabs.Tab>
+        <Tabs.Tab value="classwork" className={classes.tab}>
+          <Title order={5} className={classes.tabTitle}>
+            Classwork
+          </Title>
+        </Tabs.Tab>
+        <Tabs.Tab value="people" className={classes.tab}>
+          <Title order={5} className={classes.tabTitle}>
+            People
+          </Title>
+        </Tabs.Tab>
+      </Tabs.List>
+      <Tabs.Panel value="stream">
+        <StreamContainer />
+      </Tabs.Panel>
+    </Tabs>
+  );
+};
+
+export default ClassroomNav;
