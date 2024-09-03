@@ -1,9 +1,15 @@
 import { ActionIcon, Box, Menu, SimpleGrid, Text } from "@mantine/core";
 import { BsInfoSquare } from "react-icons/bs";
 
+import { Classroom } from "@/modules/Dasboard/components/ClassroomCardList/ClassroomCardList.types";
+
 import { useStyles } from "./ClassroomInfoMenu.styles";
 
-const ClassroomInfoMenu = () => {
+interface ClassroomInfoMenuProps {
+  classroom: Classroom;
+}
+
+const ClassroomInfoMenu: React.FC<ClassroomInfoMenuProps> = ({ classroom }) => {
   const { classes } = useStyles();
 
   return (
@@ -17,9 +23,17 @@ const ClassroomInfoMenu = () => {
 
         <Menu.Dropdown>
           <SimpleGrid p={"xs"}>
-            <Text size="sm">Subject: Math</Text>
-            <Text size="sm">Class Time: 10:10 AM</Text>
-            <Text size="sm">Days: Wednesday</Text>
+            <Text size="sm">Subject: {classroom.subject}</Text>
+            <Text size="sm">
+              Class Time:{" "}
+              {new Intl.DateTimeFormat("en-US", {
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: true,
+                timeZone: "UTC",
+              }).format(new Date(classroom.classTime))}
+            </Text>
+            <Text size="sm">Days: {classroom.days.join(", ")}</Text>
           </SimpleGrid>
         </Menu.Dropdown>
       </Menu>
