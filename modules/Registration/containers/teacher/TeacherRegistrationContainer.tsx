@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 
-import { notifications } from "@mantine/notifications";
+import { useRouter } from "next/router";
 
+import { notifications } from "@mantine/notifications";
+import { useDispatch } from "react-redux";
+
+import { setToken, setUser } from "@/shared/redux/reducers/auth.reducer";
 import { useRegisterTeacherMutation } from "@/shared/redux/rtk-apis/auth/auth.api";
 import { TTeacherRegistrationFields } from "@/shared/redux/rtk-apis/auth/auth.types";
 
@@ -11,6 +15,8 @@ import { APIError, UniqueCodeError } from "../../components/teacher/TeacherRegis
 const TeacherRegistrationContainer: React.FC = () => {
   const [registerTeacher] = useRegisterTeacherMutation();
   const [uniqueCodeError, setUniqueCodeError] = useState<UniqueCodeError | null>(null);
+  const dispatch = useDispatch();
+  const router = useRouter();
 
   const handleSubmit = async (data: TTeacherRegistrationFields) => {
     const registrationData: TTeacherRegistrationFields = {
@@ -19,6 +25,8 @@ const TeacherRegistrationContainer: React.FC = () => {
     };
     try {
       const result = await registerTeacher(registrationData).unwrap();
+      dispatch(setUser(result.user));
+      dispatch(setToken(result.token));
       localStorage.setItem("authToken", result.token);
       notifications.show({
         title: "Success",
@@ -26,7 +34,7 @@ const TeacherRegistrationContainer: React.FC = () => {
         color: "blue",
       });
       setUniqueCodeError(null);
-      // TODO => Redirect to the teacher dashboard
+      router.push("/dashboard/teacher");
     } catch (error) {
       console.error("Registration failed:", error);
       const apiError = error as APIError;
