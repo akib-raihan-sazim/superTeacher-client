@@ -1,16 +1,28 @@
 import React from "react";
 
-import { ActionIcon, Anchor, Button, Group, Menu, Title } from "@mantine/core";
-import { FaPlus } from "react-icons/fa6";
-import { useSelector } from "react-redux";
+import { useRouter } from "next/router";
 
-import { TRootState } from "@/shared/redux/store";
+import { Anchor, Button, Group, Menu, Title } from "@mantine/core";
+import { FaPlus } from "react-icons/fa6";
+
+import { ACCESS_TOKEN_LOCAL_STORAGE_KEY } from "@/shared/constants/app.constants";
+import { useAppDispatch, useAppSelector } from "@/shared/redux/hooks";
+import { clearUser, selectAuthenticatedUser } from "@/shared/redux/reducers/user.reducer";
+import { EUserRole } from "@/shared/redux/rtk-apis/auth/auth.types";
 
 import { useStyles } from "./Navbar.styles";
 
 const Navbar = () => {
-  const user = useSelector((state: TRootState) => state.auth.user);
+  const user = useAppSelector(selectAuthenticatedUser);
   const { classes } = useStyles();
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+
+  const handleLogout = () => {
+    dispatch(clearUser());
+    localStorage.removeItem(ACCESS_TOKEN_LOCAL_STORAGE_KEY);
+    router.push("/login");
+  };
 
   return (
     <Group className={classes.navbar}>
@@ -26,10 +38,8 @@ const Navbar = () => {
             Dashboard
           </Title>
         </Anchor>
-        {user?.userType === "teacher" && (
-          <ActionIcon>
-            <FaPlus color="white" />
-          </ActionIcon>
+        {user?.userType === EUserRole.TEACHER && (
+          <FaPlus color="white" style={{ cursor: "pointer" }} />
         )}
         <Menu
           shadow="xl"
@@ -39,11 +49,11 @@ const Navbar = () => {
           position="bottom-end"
         >
           <Menu.Target>
-            <Button className={classes.userButton}>{user ? `${user.firstName}` : "User"}</Button>
+            <Button className={classes.userButton}>{user?.firstName || "User"}</Button>
           </Menu.Target>
           <Menu.Dropdown>
             <Menu.Item>Profile</Menu.Item>
-            <Menu.Item>Logout</Menu.Item>
+            <Menu.Item onClick={handleLogout}>Logout</Menu.Item>
           </Menu.Dropdown>
         </Menu>
       </Group>

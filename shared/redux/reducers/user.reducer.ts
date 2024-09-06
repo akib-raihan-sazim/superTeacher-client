@@ -8,15 +8,15 @@ import { EUserRole, TTokenizedUser } from "../rtk-apis/auth/auth.types";
 interface IAuthenticatedUser {
   userId: number | null;
   email: string | null;
-  claim: EUserRole | null;
-  claimId: number | null;
+  firstName: string | null;
+  userType: EUserRole | null;
 }
 
 const initialState: IAuthenticatedUser = {
-  userId: 1,
+  userId: null,
   email: null,
-  claimId: null,
-  claim: null,
+  firstName: null,
+  userType: null,
 };
 
 export const authenticatedUserSlice = createSlice({
@@ -25,15 +25,14 @@ export const authenticatedUserSlice = createSlice({
   reducers: {
     setUser: (state, action: PayloadAction<TTokenizedUser>) => {
       state.email = action.payload.email;
-      state.claimId = action.payload.claimId;
-      state.claim = action.payload.claim as EUserRole;
+      state.firstName = action.payload.firstName;
+      state.userType = action.payload.userType;
       state.userId = action.payload.id;
     },
-
     clearUser: (state) => {
       state.email = null;
-      state.claimId = null;
-      state.claim = null;
+      state.firstName = null;
+      state.userType = null;
       state.userId = null;
     },
   },
@@ -41,6 +40,6 @@ export const authenticatedUserSlice = createSlice({
 
 export const { setUser, clearUser } = authenticatedUserSlice.actions;
 
-export const selectUserId = (state: TRootState) => state.authenticatedUser.userId;
+export const selectAuthenticatedUser = (state: TRootState) => state.authenticatedUser;
 
 export default authenticatedUserSlice.reducer;
