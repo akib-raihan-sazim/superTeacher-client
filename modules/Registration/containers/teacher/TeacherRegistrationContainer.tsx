@@ -3,15 +3,11 @@ import React, { useState } from "react";
 import { useRouter } from "next/router";
 
 import { notifications } from "@mantine/notifications";
+import { useDispatch } from "react-redux";
 
-import { useAppDispatch } from "@/shared/redux/hooks";
-import { setUser } from "@/shared/redux/reducers/user.reducer";
+import { setToken, setUser } from "@/shared/redux/reducers/auth.reducer";
 import { useRegisterTeacherMutation } from "@/shared/redux/rtk-apis/auth/auth.api";
-import {
-  EUserRole,
-  TTeacherRegistrationFields,
-  TTokenizedUser,
-} from "@/shared/redux/rtk-apis/auth/auth.types";
+import { TTeacherRegistrationFields } from "@/shared/redux/rtk-apis/auth/auth.types";
 
 import TeacherRegistrationForm from "../../components/teacher/TeacherRegistrationForm";
 import { APIError, UniqueCodeError } from "../../components/teacher/TeacherRegistrationForm.type";
@@ -19,7 +15,7 @@ import { APIError, UniqueCodeError } from "../../components/teacher/TeacherRegis
 const TeacherRegistrationContainer: React.FC = () => {
   const [registerTeacher] = useRegisterTeacherMutation();
   const [uniqueCodeError, setUniqueCodeError] = useState<UniqueCodeError | null>(null);
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
   const router = useRouter();
 
   const handleSubmit = async (data: TTeacherRegistrationFields) => {
@@ -29,13 +25,8 @@ const TeacherRegistrationContainer: React.FC = () => {
     };
     try {
       const result = await registerTeacher(registrationData).unwrap();
-      const user: TTokenizedUser = {
-        id: result.user.id,
-        firstName: result.user.firstName,
-        email: result.user.email,
-        userType: result.user.userType as EUserRole,
-      };
-      dispatch(setUser(user));
+      dispatch(setUser(result.user));
+      dispatch(setToken(result.token));
       localStorage.setItem("authToken", result.token);
       notifications.show({
         title: "Success",

@@ -3,34 +3,25 @@ import React from "react";
 import { useRouter } from "next/router";
 
 import { notifications } from "@mantine/notifications";
+import { useDispatch } from "react-redux";
 
-import { useAppDispatch } from "@/shared/redux/hooks";
-import { setUser } from "@/shared/redux/reducers/user.reducer";
+import { setToken, setUser } from "@/shared/redux/reducers/auth.reducer";
 import { useLoginMutation } from "@/shared/redux/rtk-apis/auth/auth.api";
-import {
-  EUserRole,
-  ILoginFormValues,
-  TTokenizedUser,
-} from "@/shared/redux/rtk-apis/auth/auth.types";
+import { ILoginFormValues } from "@/shared/redux/rtk-apis/auth/auth.types";
 
 import LoginForm from "../components/LoginForm";
 import { ApiError } from "./LoginContainer.types";
 
 const LoginContainer = () => {
   const [login] = useLoginMutation();
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
   const router = useRouter();
 
   const handleSubmit = async (data: ILoginFormValues) => {
     try {
       const result = await login(data).unwrap();
-      const user: TTokenizedUser = {
-        id: result.user.id,
-        firstName: result.user.firstName,
-        email: result.user.email,
-        userType: result.user.userType as EUserRole,
-      };
-      dispatch(setUser(user));
+      dispatch(setUser(result.user));
+      dispatch(setToken(result.token));
       localStorage.setItem("authToken", result.token);
 
       notifications.show({
