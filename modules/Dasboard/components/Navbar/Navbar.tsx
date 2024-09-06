@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { useRouter } from "next/router";
 
@@ -10,6 +10,7 @@ import { useAppDispatch, useAppSelector } from "@/shared/redux/hooks";
 import { clearUser, selectAuthenticatedUser } from "@/shared/redux/reducers/user.reducer";
 import { EUserRole } from "@/shared/redux/rtk-apis/auth/auth.types";
 
+import ClassroomFormModal from "../ClassroomFormModal/ClassroomFomModal";
 import { useStyles } from "./Navbar.styles";
 
 const Navbar = () => {
@@ -17,11 +18,20 @@ const Navbar = () => {
   const { classes } = useStyles();
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleLogout = () => {
     dispatch(clearUser());
     localStorage.removeItem(ACCESS_TOKEN_LOCAL_STORAGE_KEY);
     router.push("/login");
+  };
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
   };
 
   return (
@@ -39,7 +49,7 @@ const Navbar = () => {
           </Title>
         </Anchor>
         {user?.userType === EUserRole.TEACHER && (
-          <FaPlus color="white" style={{ cursor: "pointer" }} />
+          <FaPlus color="white" style={{ cursor: "pointer" }} onClick={handleOpenModal} />
         )}
         <Menu
           shadow="xl"
@@ -57,6 +67,7 @@ const Navbar = () => {
           </Menu.Dropdown>
         </Menu>
       </Group>
+      <ClassroomFormModal opened={isModalOpen} onClose={handleCloseModal} />
     </Group>
   );
 };
