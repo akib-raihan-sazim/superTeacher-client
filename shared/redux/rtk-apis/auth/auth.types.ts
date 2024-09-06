@@ -6,15 +6,15 @@ export type TLoginRequestFields = {
 };
 
 export enum EUserRole {
-  ADMIN = "ADMIN",
-  SUPER_USER = "SUPER_USER",
+  STUDENT = "student",
+  TEACHER = "teacher",
 }
 
 export type TTokenizedUser = {
   id: number;
-  claim: EUserRole;
+  firstName: string;
   email: string;
-  claimId: number;
+  userType: EUserRole;
 };
 
 export type TLoginResponse = {
