@@ -1,8 +1,11 @@
-import React from "react";
-
 import { Box, Button, Group, Modal, SimpleGrid, Text, useMantineTheme } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
+import dayjs from "dayjs";
 import { useForm } from "react-hook-form";
 import { TextInput, Select, MultiSelect, TimeInput } from "react-hook-form-mantine";
+
+import { ApiError } from "@/modules/Login/containers/LoginContainer.types";
+import { useCreateClassroomMutation } from "@/shared/redux/rtk-apis/classrooms/classrooms.api";
 
 import { DaysOfTheWeekOptions, Subjects } from "./ClassroomFormModal.constants";
 import {
@@ -16,6 +19,7 @@ import { ClassroomFormModalProps } from "./ClassroomFormModal.types";
 const ClassroomFormModal: React.FC<ClassroomFormModalProps> = ({ opened, onClose }) => {
   const theme = useMantineTheme();
   const styles = useClassroomFormModalStyles(theme);
+  const [createClassroom] = useCreateClassroomMutation();
 
   const {
     handleSubmit,
@@ -27,13 +31,32 @@ const ClassroomFormModal: React.FC<ClassroomFormModalProps> = ({ opened, onClose
     defaultValues: ClassroomFormDefaultValues,
   });
 
-  const onSubmit = (data: ClassroomFormData) => {
-    // TODO integrate create classroom api endpoint
-    console.log(data);
-    reset();
-    onClose();
+  const onSubmit = async (data: ClassroomFormData) => {
+    try {
+      const classTime = dayjs().format(`YYYY-MM-DD[T]${data.class_time}:00[Z]`);
+      const payload = {
+        ...data,
+        classTime,
+      };
+      await createClassroom(payload).unwrap();
+      notifications.show({
+        title: "Success",
+        message: "Classroom created successfully!",
+        color: "blue",
+      });
+      reset();
+      onClose();
+    } catch (error) {
+      console.error("Failed to create classroom:", error);
+      const errorMessage =
+        (error as ApiError)?.data?.message || "Failed to create classroom. Please try again.";
+      notifications.show({
+        title: "Error",
+        message: errorMessage,
+        color: "red",
+      });
+    }
   };
-
   return (
     <Modal opened={opened} onClose={onClose} size="md" centered>
       <Box mx="lg">
