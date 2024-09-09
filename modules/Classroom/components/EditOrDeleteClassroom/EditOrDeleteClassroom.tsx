@@ -4,11 +4,13 @@ import { ActionIcon, Menu } from "@mantine/core";
 import { HiDotsHorizontal } from "react-icons/hi";
 
 import { Classroom } from "@/modules/Dasboard/components/ClassroomCardList/ClassroomCardList.types";
+import ClassroomFormModal from "@/modules/Dasboard/components/ClassroomFormModal/ClassroomFomModal";
 
 import DeleteClassroomConfirmation from "../DeleteClassroomConfirmation/DeleteClassroomConfirmation";
 
 const EditOrDeleteClassroom = ({ classroom }: { classroom: Classroom }) => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   return (
     <>
@@ -20,7 +22,7 @@ const EditOrDeleteClassroom = ({ classroom }: { classroom: Classroom }) => {
         </Menu.Target>
 
         <Menu.Dropdown>
-          <Menu.Item>Edit</Menu.Item>
+          <Menu.Item onClick={() => setIsEditModalOpen(true)}>Edit</Menu.Item>
           <Menu.Item color="red" onClick={() => setIsDeleteModalOpen(true)}>
             Delete
           </Menu.Item>
@@ -31,6 +33,12 @@ const EditOrDeleteClassroom = ({ classroom }: { classroom: Classroom }) => {
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
         classroomId={classroom.id}
+      />
+
+      <ClassroomFormModal
+        opened={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        classroom={classroom}
       />
     </>
   );
