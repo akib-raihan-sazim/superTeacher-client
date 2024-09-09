@@ -24,6 +24,17 @@ const enrollmentApi = projectApi.injectEndpoints({
       }),
       invalidatesTags: ["Enrollments", "UnenrolledStudents"],
     }),
+    unenrollStudent: builder.mutation<void, { studentId: number; classroomId: number }>({
+      query: ({ studentId, classroomId }) => ({
+        url: `/enrollments`,
+        method: "DELETE",
+        body: {
+          studentId,
+          classroomId,
+        },
+      }),
+      invalidatesTags: ["Enrollments", "UnenrolledStudents"],
+    }),
   }),
   overrideExisting: false,
 });
@@ -32,4 +43,5 @@ export const {
   useGetClassroomStudentsQuery,
   useGetUnenrolledStudentsQuery,
   useEnrollStudentMutation,
+  useUnenrollStudentMutation,
 } = enrollmentApi;

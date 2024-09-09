@@ -5,6 +5,7 @@ export interface IStudent {
   firstName: string;
   lastName: string;
   email: string;
+  userId: number;
 }
 
 export interface IPeopleLayoutProps {
