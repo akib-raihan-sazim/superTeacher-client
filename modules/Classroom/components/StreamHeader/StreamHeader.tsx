@@ -1,7 +1,7 @@
 import { BackgroundImage, Box, Flex, Title } from "@mantine/core";
 
 import ClassroomInfoMenu from "../ClassroomInfoMenu/ClassroomInfoMenu";
-import EditClassroom from "../EditClassroom/EditClassroom";
+import EditOrDeleteClassroom from "../EditOrDeleteClassroom/EditOrDeleteClassroom";
 import { IStreamHeaderProps } from "./StreamHeader.interface";
 import { useStyles } from "./StreamHeader.styles";
 
@@ -27,7 +27,7 @@ const StreamHeader: React.FC<IStreamHeaderProps> = ({ classroom }) => {
           </Flex>
 
           <Flex direction="column" justify="space-between">
-            <EditClassroom />
+            <EditOrDeleteClassroom classroom={classroom} />
             <ClassroomInfoMenu classroom={classroom} />
           </Flex>
         </Flex>

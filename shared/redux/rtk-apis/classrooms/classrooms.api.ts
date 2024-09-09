@@ -29,9 +29,20 @@ const classroomsApi = enhancedProjectApi.injectEndpoints({
       }),
       invalidatesTags: [{ type: "Classrooms", id: "LIST" }],
     }),
+    deleteClassroom: builder.mutation<void, number>({
+      query: (classroomId) => ({
+        url: `/classrooms/${classroomId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: [{ type: "Classrooms", id: "LIST" }],
+    }),
   }),
   overrideExisting: false,
 });
 
-export const { useGetClassroomsQuery, useCreateClassroomMutation, useGetClassroomByIdQuery } =
-  classroomsApi;
+export const {
+  useGetClassroomsQuery,
+  useCreateClassroomMutation,
+  useGetClassroomByIdQuery,
+  useDeleteClassroomMutation,
+} = classroomsApi;
