@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 import { useRouter } from "next/router";
 
@@ -8,6 +8,7 @@ import { FaPlus } from "react-icons/fa6";
 import { ACCESS_TOKEN_LOCAL_STORAGE_KEY } from "@/shared/constants/app.constants";
 import { useAppDispatch, useAppSelector } from "@/shared/redux/hooks";
 import { clearUser, selectAuthenticatedUser } from "@/shared/redux/reducers/user.reducer";
+import projectApi from "@/shared/redux/rtk-apis/api.config";
 import { EUserRole } from "@/shared/redux/rtk-apis/auth/auth.types";
 
 import ClassroomFormModal from "../ClassroomFormModal/ClassroomFomModal";
@@ -21,6 +22,7 @@ const Navbar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleLogout = () => {
+    dispatch(projectApi.util.resetApiState());
     dispatch(clearUser());
     localStorage.removeItem(ACCESS_TOKEN_LOCAL_STORAGE_KEY);
     router.push("/login");
