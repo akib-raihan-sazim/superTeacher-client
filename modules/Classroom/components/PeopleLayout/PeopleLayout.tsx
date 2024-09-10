@@ -11,7 +11,7 @@ const PeopleLayout: React.FC<IPeopleLayoutProps> = ({ students, classroom }) => 
     <StudentHeader classroomId={classroom.id} />
     <Divider my="sm" />
     {students.length > 0 ? (
-      <StudentList students={students} />
+      <StudentList students={students} classroomId={classroom.id} />
     ) : (
       <Text>No students found for this classroom.</Text>
     )}

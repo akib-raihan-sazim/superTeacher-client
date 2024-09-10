@@ -13,6 +13,7 @@ const PeopleContainer: React.FC<IPeopleContainerProps> = ({ classroom }) => {
       firstName: enrollment.student.user.firstName,
       lastName: enrollment.student.user.lastName,
       email: enrollment.student.user.email,
+      userId: enrollment.student.user.id,
     })) || [];
 
   return <PeopleLayout students={students} classroom={classroom} />;

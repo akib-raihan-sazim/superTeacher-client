@@ -1,10 +1,6 @@
-export interface Student {
-  id: number;
-  firstName: string;
-  lastName: string;
-  email: string;
-}
+import { IStudent } from "../PeopleLayout/PeopleLayout.interface";
 
 export interface StudentListProps {
-  students: Student[];
+  students: IStudent[];
+  classroomId: number;
 }
