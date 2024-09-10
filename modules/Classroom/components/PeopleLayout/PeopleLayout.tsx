@@ -13,7 +13,7 @@ const PeopleLayout: React.FC<IPeopleLayoutProps> = ({ students, classroom }) => 
     {students.length > 0 ? (
       <StudentList students={students} classroomId={classroom.id} />
     ) : (
-      <Text>No students found for this classroom.</Text>
+      <Text c={"white"}>No students found for this classroom.</Text>
     )}
   </Box>
 );

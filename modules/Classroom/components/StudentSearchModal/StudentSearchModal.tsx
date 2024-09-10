@@ -92,17 +92,19 @@ const StudentSearchModal: React.FC<StudentSearchModalProps> = ({
               Loading students...
             </Text>
           )}
-          {isEnrolling && (
-            <Text color="dimmed" size="sm" mt="sm">
-              Enrolling student...
-            </Text>
-          )}
           <Group mt="xl" mb="sm" position="right">
             <Button size="sm" onClick={handleClose} style={{ background: "#4CAF50" }}>
               Cancel
             </Button>
-            <Button type="submit" size="sm" color="green" style={{ background: "#4CAF50" }}>
-              Enroll
+            <Button
+              type="submit"
+              size="sm"
+              color="green"
+              style={{ background: "#4CAF50" }}
+              disabled={isEnrolling}
+              loading={isEnrolling}
+            >
+              {!isEnrolling && "Enroll"}
             </Button>
           </Group>
         </form>

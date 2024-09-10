@@ -18,6 +18,7 @@ import {
 import styles from "../../components/student/StudentRegistraionForm.module.css";
 import { StudentRegistrationForm } from "../../components/student/StudentRegistrationForm";
 import { TStudentRegistrationFormData } from "../../components/student/StudentRegistrationForm.types";
+import { APIError } from "../../components/teacher/TeacherRegistrationForm.type";
 
 export function StudentRegistrationContainer() {
   const [registerStudent] = useRegisterStudentMutation();
@@ -49,10 +50,10 @@ export function StudentRegistrationContainer() {
         router.push("/dashboard");
       }, 100);
     } catch (error) {
-      console.error("Registration failed:", error);
+      const apiError = error as APIError;
       notifications.show({
         title: "Error",
-        message: "Registration failed. Please try again.",
+        message: apiError.data.message,
         color: "red",
       });
     }

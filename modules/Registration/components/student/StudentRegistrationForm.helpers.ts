@@ -3,6 +3,8 @@ import { z } from "zod";
 
 import { TStudentRegistrationFormData } from "./StudentRegistrationForm.types";
 
+const bangladeshPhoneRegex = /^01[3-9]\d{8}$/;
+
 const educationLevelEnum = z.enum(["school", "college", "university"]);
 const degreeTypeEnum = z.enum(["Bachelors", "Masters"]);
 
@@ -12,7 +14,10 @@ export const studentRegistrationSchema = z
     lastName: z.string().min(1, "Last name is required"),
     gender: z.string().min(1, "Gender is required"),
     email: z.string().email("Invalid email"),
-    phoneNo: z.string().min(1, "Phone number is required"),
+    phoneNo: z
+      .string()
+      .min(1, "Phone number is required")
+      .regex(bangladeshPhoneRegex, "Invalid phone number"),
     address: z.string().min(1, "Address is required"),
     educationLevel: educationLevelEnum,
     password: z.string().min(6, "Password must be at least 6 characters"),
