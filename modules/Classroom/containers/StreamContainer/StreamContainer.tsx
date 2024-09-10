@@ -1,8 +1,14 @@
+import { Classroom } from "@/modules/Dasboard/components/ClassroomCardList/ClassroomCardList.types";
+
 import StreamHeader from "../../components/StreamHeader/StreamHeader";
 
-const StreamContainer = () => (
+interface StreamContainerProps {
+  classroom: Classroom;
+}
+
+const StreamContainer: React.FC<StreamContainerProps> = ({ classroom }) => (
   <>
-    <StreamHeader />
+    <StreamHeader classroom={classroom} />
   </>
 );
 

@@ -15,6 +15,12 @@ const classroomsApi = enhancedProjectApi.injectEndpoints({
       }),
       providesTags: [{ type: "Classrooms", id: "LIST" }],
     }),
+    getClassroomById: builder.query<Classroom, number>({
+      query: (id) => ({
+        url: `/classrooms/${id}`,
+        method: "GET",
+      }),
+    }),
     createClassroom: builder.mutation<ClassroomApiResponse, CreateClassroomRequest>({
       query: (newClassroom) => ({
         url: "/classrooms",
@@ -27,4 +33,5 @@ const classroomsApi = enhancedProjectApi.injectEndpoints({
   overrideExisting: false,
 });
 
-export const { useGetClassroomsQuery, useCreateClassroomMutation } = classroomsApi;
+export const { useGetClassroomsQuery, useCreateClassroomMutation, useGetClassroomByIdQuery } =
+  classroomsApi;
