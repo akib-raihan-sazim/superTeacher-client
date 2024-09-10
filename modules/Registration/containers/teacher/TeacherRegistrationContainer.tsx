@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 
 import { notifications } from "@mantine/notifications";
 
+import { ACCESS_TOKEN_LOCAL_STORAGE_KEY } from "@/shared/constants/app.constants";
 import { useAppDispatch } from "@/shared/redux/hooks";
 import { setUser } from "@/shared/redux/reducers/user.reducer";
 import { useRegisterTeacherMutation } from "@/shared/redux/rtk-apis/auth/auth.api";
@@ -36,16 +37,15 @@ const TeacherRegistrationContainer: React.FC = () => {
         userType: result.user.userType as EUserRole,
       };
       dispatch(setUser(user));
-      localStorage.setItem("authToken", result.token);
+      localStorage.setItem(ACCESS_TOKEN_LOCAL_STORAGE_KEY, result.token);
       notifications.show({
         title: "Success",
         message: "Teacher registration successful!",
         color: "blue",
       });
       setUniqueCodeError(null);
-      router.push("/dashboard/teacher");
+      router.push("/dashboard");
     } catch (error) {
-      console.error("Registration failed:", error);
       const apiError = error as APIError;
       if (apiError.data && apiError.data.message) {
         if (apiError.data.message.includes("unique code")) {

@@ -1,8 +1,9 @@
-import { Container, LoadingOverlay } from "@mantine/core";
+import { Box, Container, LoadingOverlay, Text } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 
 import { useAppSelector } from "@/shared/redux/hooks";
 import { selectAuthenticatedUser } from "@/shared/redux/reducers/user.reducer";
+import { EUserRole } from "@/shared/redux/rtk-apis/auth/auth.types";
 import { useGetClassroomsQuery } from "@/shared/redux/rtk-apis/classrooms/classrooms.api";
 
 import ClassroomList from "../../components/ClassroomCardList/ClassroomCardList";
@@ -27,7 +28,6 @@ const DashboardContainer: React.FC = () => {
       autoClose: 5000,
     });
   }
-
   return (
     <>
       <Navbar />
@@ -36,6 +36,19 @@ const DashboardContainer: React.FC = () => {
         {!isLoading &&
           (classrooms?.length ? (
             <ClassroomList classrooms={classrooms} />
+          ) : user?.userType === EUserRole.STUDENT ? (
+            <Box
+              style={{
+                height: "80vh",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Text size="lg" color="dimmed">
+                You are not yet enrolled in any classroom.
+              </Text>
+            </Box>
           ) : (
             <CreateClassroomButton />
           ))}
