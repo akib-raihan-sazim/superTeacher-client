@@ -5,6 +5,17 @@ export interface Teacher {
   highestEducationLevel: string;
   majorSubject: string;
   subjectsToTeach: string[];
+  user: IUser;
+}
+
+interface IUser {
+  id: number;
+  createdAt: string;
+  updatedAt: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  userType: string;
 }
 
 export interface Classroom {
