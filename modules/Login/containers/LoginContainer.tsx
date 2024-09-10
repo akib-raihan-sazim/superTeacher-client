@@ -38,7 +38,7 @@ const LoginContainer = () => {
         message: "Login successful!",
         color: "blue",
       });
-      router.push(`/dashboard/${result.user.userType}`);
+      router.push(`/dashboard`);
     } catch (error) {
       console.error("Login failed:", error);
 
