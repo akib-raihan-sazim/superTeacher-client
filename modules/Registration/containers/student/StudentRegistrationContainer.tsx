@@ -1,10 +1,19 @@
-import React, { useState } from "react";
+import { useState } from "react";
+
+import { useRouter } from "next/router";
 
 import { notifications } from "@mantine/notifications";
 
 import RegisterModal from "@/modules/Landing/components/RegisterModal/RegisterModal";
+import { ACCESS_TOKEN_LOCAL_STORAGE_KEY } from "@/shared/constants/app.constants";
+import { useAppDispatch } from "@/shared/redux/hooks";
+import { setUser } from "@/shared/redux/reducers/user.reducer";
 import { useRegisterStudentMutation } from "@/shared/redux/rtk-apis/auth/auth.api";
-import { TStudentRegistrationFields } from "@/shared/redux/rtk-apis/auth/auth.types";
+import {
+  EUserRole,
+  TStudentRegistrationFields,
+  TTokenizedUser,
+} from "@/shared/redux/rtk-apis/auth/auth.types";
 
 import styles from "../../components/student/StudentRegistraionForm.module.css";
 import { StudentRegistrationForm } from "../../components/student/StudentRegistrationForm";
@@ -13,6 +22,8 @@ import { TStudentRegistrationFormData } from "../../components/student/StudentRe
 export function StudentRegistrationContainer() {
   const [registerStudent] = useRegisterStudentMutation();
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
+  const router = useRouter();
+  const dispatch = useAppDispatch();
 
   const handleSubmit = async (data: TStudentRegistrationFormData) => {
     const registrationData: TStudentRegistrationFields = {
@@ -21,12 +32,22 @@ export function StudentRegistrationContainer() {
     };
     try {
       const result = await registerStudent(registrationData).unwrap();
-      console.log("Registration successful:", result);
+      const user: TTokenizedUser = {
+        id: result.user.id,
+        firstName: result.user.firstName,
+        email: result.user.email,
+        userType: result.user.userType as EUserRole,
+      };
+      dispatch(setUser(user));
+      localStorage.setItem(ACCESS_TOKEN_LOCAL_STORAGE_KEY, result.token);
       notifications.show({
         title: "Success",
         message: "Registration successful!",
         color: "blue",
       });
+      setTimeout(() => {
+        router.push("/dashboard");
+      }, 100);
     } catch (error) {
       console.error("Registration failed:", error);
       notifications.show({

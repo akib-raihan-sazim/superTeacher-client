@@ -14,9 +14,6 @@ const StudentHeader: React.FC<StudentHeaderProps> = ({ classroomId }) => {
   const user = useAppSelector(selectAuthenticatedUser);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleOpenModal = () => setIsModalOpen(true);
-  const handleCloseModal = () => setIsModalOpen(false);
-
   return (
     <>
       <Flex align={"center"} justify={"space-between"} mt={"xl"}>
@@ -24,14 +21,14 @@ const StudentHeader: React.FC<StudentHeaderProps> = ({ classroomId }) => {
           Students
         </Title>
         {user?.userType === EUserRole.TEACHER && (
-          <ActionIcon onClick={handleOpenModal}>
+          <ActionIcon onClick={() => setIsModalOpen(true)}>
             <FaRegPlusSquare color="#4CAF50" />
           </ActionIcon>
         )}
       </Flex>
       <StudentSearchModal
         isOpen={isModalOpen}
-        onClose={handleCloseModal}
+        onClose={() => setIsModalOpen(false)}
         classroomId={classroomId}
       />
     </>

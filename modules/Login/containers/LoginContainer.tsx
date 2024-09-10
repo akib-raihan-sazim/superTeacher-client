@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 
 import { notifications } from "@mantine/notifications";
 
+import { useSessionContext } from "@/shared/components/wrappers/AppInitializer/AppInitializerContext";
 import { useAppDispatch } from "@/shared/redux/hooks";
 import { setUser } from "@/shared/redux/reducers/user.reducer";
 import { useLoginMutation } from "@/shared/redux/rtk-apis/auth/auth.api";
@@ -20,6 +21,7 @@ const LoginContainer = () => {
   const [login] = useLoginMutation();
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const { getMe } = useSessionContext();
 
   const handleSubmit = async (data: ILoginFormValues) => {
     try {
@@ -38,6 +40,7 @@ const LoginContainer = () => {
         message: "Login successful!",
         color: "blue",
       });
+      await getMe().unwrap();
       router.push(`/dashboard`);
     } catch (error) {
       console.error("Login failed:", error);

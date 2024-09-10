@@ -2,9 +2,14 @@ import { useRouter } from "next/router";
 
 import { Card, Text, Group, Image, Badge } from "@mantine/core";
 
+import { useAppSelector } from "@/shared/redux/hooks";
+import { selectAuthenticatedUser } from "@/shared/redux/reducers/user.reducer";
+import { EUserRole } from "@/shared/redux/rtk-apis/auth/auth.types";
+
 import { ClassroomCardProps } from "./ClassroomCard.types";
 
 const ClassroomCard = ({ classroom }: ClassroomCardProps) => {
+  const user = useAppSelector(selectAuthenticatedUser);
   const router = useRouter();
 
   const handleCardClick = () => {
@@ -42,6 +47,12 @@ const ClassroomCard = ({ classroom }: ClassroomCardProps) => {
           timeZone: "UTC",
         }).format(new Date(classroom.classTime))}
       </Text>
+      {user?.userType === EUserRole.STUDENT && classroom.teacher && (
+        <Text size="sm" mt="md">
+          <strong>Teacher:</strong> {classroom.teacher.user.firstName}{" "}
+          {classroom.teacher.user.lastName}
+        </Text>
+      )}
     </Card>
   );
 };

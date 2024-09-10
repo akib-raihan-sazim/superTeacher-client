@@ -1,5 +1,9 @@
 import { BackgroundImage, Box, Flex, Title } from "@mantine/core";
 
+import { useAppSelector } from "@/shared/redux/hooks";
+import { selectAuthenticatedUser } from "@/shared/redux/reducers/user.reducer";
+import { EUserRole } from "@/shared/redux/rtk-apis/auth/auth.types";
+
 import ClassroomInfoMenu from "../ClassroomInfoMenu/ClassroomInfoMenu";
 import EditOrDeleteClassroom from "../EditOrDeleteClassroom/EditOrDeleteClassroom";
 import { IStreamHeaderProps } from "./StreamHeader.interface";
@@ -7,6 +11,7 @@ import { useStyles } from "./StreamHeader.styles";
 
 const StreamHeader: React.FC<IStreamHeaderProps> = ({ classroom }) => {
   const { classes } = useStyles();
+  const user = useAppSelector(selectAuthenticatedUser);
 
   return (
     <Box mx="auto" maw="97%" mih={300} mt="lg">
@@ -27,7 +32,10 @@ const StreamHeader: React.FC<IStreamHeaderProps> = ({ classroom }) => {
           </Flex>
 
           <Flex direction="column" justify="space-between">
-            <EditOrDeleteClassroom classroom={classroom} />
+            {user?.userType === EUserRole.TEACHER && (
+              <EditOrDeleteClassroom classroom={classroom} />
+            )}
+            <></>
             <ClassroomInfoMenu classroom={classroom} />
           </Flex>
         </Flex>
