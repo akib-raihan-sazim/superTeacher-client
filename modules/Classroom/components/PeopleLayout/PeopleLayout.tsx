@@ -8,7 +8,7 @@ import { IPeopleLayoutProps } from "./PeopleLayout.interface";
 const PeopleLayout: React.FC<IPeopleLayoutProps> = ({ students, classroom }) => (
   <Box mx="xs" py="sm" px="xl" mih="100vh" w="100%">
     <TeacherHeader classroom={classroom} />
-    <StudentHeader />
+    <StudentHeader classroomId={classroom.id} />
     <Divider my="sm" />
     {students.length > 0 ? (
       <StudentList students={students} />
