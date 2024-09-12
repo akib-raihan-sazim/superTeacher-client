@@ -9,9 +9,18 @@ const messagesApi = projectApi.injectEndpoints({
         method: "POST",
         body: messageData,
       }),
+      invalidatesTags: ["Messages"],
+    }),
+
+    getClassroomMessages: builder.query<IMessage[], number>({
+      query: (classroomId) => ({
+        url: `/messages/classroom/${classroomId}`,
+        method: "GET",
+      }),
+      providesTags: ["Messages"],
     }),
   }),
   overrideExisting: false,
 });
 
-export const { useCreateMessageMutation } = messagesApi;
+export const { useCreateMessageMutation, useGetClassroomMessagesQuery } = messagesApi;

@@ -2,7 +2,6 @@ import { createStyles } from "@mantine/core";
 
 export const useStyles = createStyles((theme) => ({
   outerContainer: {
-    minHeight: "100vh",
     width: "100%",
     padding: `${theme.spacing.sm} 0`,
   },

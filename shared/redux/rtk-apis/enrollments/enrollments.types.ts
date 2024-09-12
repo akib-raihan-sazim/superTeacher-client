@@ -3,6 +3,7 @@ export interface IUser {
   firstName: string;
   lastName: string;
   email: string;
+  userType: string;
 }
 
 export interface IStudent {
