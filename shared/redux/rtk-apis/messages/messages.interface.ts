@@ -1,8 +1,10 @@
+import { IUser } from "../enrollments/enrollments.types";
+
 export interface IMessage {
   id: number;
   content: string;
   attachmentURL?: string;
-  senderId: number;
+  sender: IUser;
   classroomId: number;
   createdAt: string;
   updatedAt: string;
