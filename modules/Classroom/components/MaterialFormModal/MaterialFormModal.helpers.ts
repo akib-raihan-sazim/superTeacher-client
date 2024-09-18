@@ -5,7 +5,6 @@ export const materialFormSchema = z.object({
   description: z.string().min(1, { message: "Description is required" }),
   file: z
     .instanceof(File, { message: "File is required" })
-    .nullable()
     .refine((file) => file !== null, { message: "File is required" }),
 });
 
