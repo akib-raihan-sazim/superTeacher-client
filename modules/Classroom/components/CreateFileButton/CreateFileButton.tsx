@@ -10,9 +10,10 @@ import {
 } from "react-icons/ai";
 
 import MaterialFormModal from "../MaterialFormModal/MaterialFormModal";
+import { ICreateFileButtonProps } from "./CreateFileButton.interface";
 import { useStyles } from "./CreateFileButton.styles";
 
-const CreateFileButton = () => {
+const CreateFileButton: React.FC<ICreateFileButtonProps> = ({ classroom }) => {
   const { classes } = useStyles();
   const [openCreateButton, setOpenCreateButton] = useState(false);
   const [openMaterialModal, setOpenMaterialModal] = useState(false);
@@ -62,7 +63,11 @@ const CreateFileButton = () => {
         )}
       </Box>
 
-      <MaterialFormModal opened={openMaterialModal} onClose={() => setOpenMaterialModal(false)} />
+      <MaterialFormModal
+        opened={openMaterialModal}
+        onClose={() => setOpenMaterialModal(false)}
+        classroomId={classroom.id}
+      />
     </Box>
   );
 };

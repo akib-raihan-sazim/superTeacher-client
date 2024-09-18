@@ -12,13 +12,17 @@ import {
   Button,
   Group,
 } from "@mantine/core";
+import { showNotification } from "@mantine/notifications";
 import { useForm, Controller } from "react-hook-form";
+
+import { ApiError } from "@/modules/Login/containers/LoginContainer.types";
+import { useUploadResourceMutation } from "@/shared/redux/rtk-apis/classworks/classworks.api";
 
 import { materialFormSchema, TMaterialFormValues } from "./MaterialFormModal.helpers";
 import { IMaterialFormModalProps } from "./MaterialFormModal.interface";
 import { inputStyles } from "./MaterialFormModal.styles";
 
-const MaterialFormModal: React.FC<IMaterialFormModalProps> = ({ opened, onClose }) => {
+const MaterialFormModal: React.FC<IMaterialFormModalProps> = ({ opened, onClose, classroomId }) => {
   const {
     control,
     handleSubmit,
@@ -31,16 +35,35 @@ const MaterialFormModal: React.FC<IMaterialFormModalProps> = ({ opened, onClose 
   });
 
   const [isLoading, setIsLoading] = useState(false);
+  const [uploadResource] = useUploadResourceMutation();
 
-  const onSubmit = (data: TMaterialFormValues) => {
-    // TODO : Add API call here
+  const onSubmit = async (data: TMaterialFormValues) => {
     setIsLoading(true);
-    console.log(data);
-    setTimeout(() => {
-      setIsLoading(false);
+    try {
+      await uploadResource({
+        file: data.file,
+        classroomId,
+        title: data.title,
+        description: data.description,
+      }).unwrap();
+
+      showNotification({
+        title: "Success",
+        message: "Resource uploaded successfully!",
+        color: "blue",
+      });
+
       reset();
       onClose();
-    }, 1000);
+    } catch (error) {
+      showNotification({
+        title: "Upload failed",
+        message: (error as ApiError).data?.message,
+        color: "red",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleCancel = () => {
