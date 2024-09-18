@@ -1,5 +1,6 @@
 import { Tabs, Title } from "@mantine/core";
 
+import ClassworkContainer from "../../containers/ClassworkContainer/ClassworkContainer";
 import PeopleContainer from "../../containers/PeopleContainer/PeopleContainer";
 import StreamContainer from "../../containers/StreamContainer/StreamContainer";
 import { IClassroomNavProps } from "./ClassroomNav.interface";
@@ -29,6 +30,9 @@ const ClassroomNav: React.FC<IClassroomNavProps> = ({ classroom }) => {
       </Tabs.List>
       <Tabs.Panel value="stream">
         <StreamContainer classroom={classroom} />
+      </Tabs.Panel>
+      <Tabs.Panel value="classwork">
+        <ClassworkContainer />
       </Tabs.Panel>
       <Tabs.Panel value="people">
         <PeopleContainer classroom={classroom} />
