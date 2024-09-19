@@ -1,6 +1,7 @@
 import { Box, Divider, Title } from "@mantine/core";
 
 import CreateFileButton from "../../components/CreateFileButton/CreateFileButton";
+import Resources from "../../components/Resources/Resources";
 import { IClassworkContainerProps } from "./ClassworkContainer.interface";
 
 const ClassworkContainer: React.FC<IClassworkContainerProps> = ({ classroom }) => (
@@ -10,6 +11,7 @@ const ClassworkContainer: React.FC<IClassworkContainerProps> = ({ classroom }) =
       Uploaded Resources
     </Title>
     <Divider my="sm" />
+    <Resources classroomId={classroom.id} />
   </Box>
 );
 
