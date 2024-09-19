@@ -1,5 +1,5 @@
 import { projectApi } from "../api.config";
-import { CreateResourceDto, IClassworkResource } from "./classworks.interface";
+import { CreateResourceDto, IClassworkResource, UpdateResourceDto } from "./classworks.interface";
 
 const classworksApi = projectApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -34,6 +34,25 @@ const classworksApi = projectApi.injectEndpoints({
       }),
       invalidatesTags: ["ClassworkResources"],
     }),
+
+    updateResource: builder.mutation<
+      IClassworkResource,
+      { classroomId: number; resourceId: number; data: UpdateResourceDto }
+    >({
+      query: ({ classroomId, resourceId, data }) => {
+        const formData = new FormData();
+        if (data.file) formData.append("file", data.file);
+        formData.append("title", data.title);
+        formData.append("description", data.description);
+
+        return {
+          url: `/classworks/${classroomId}/resources/${resourceId}`,
+          method: "PUT",
+          body: formData,
+        };
+      },
+      invalidatesTags: ["ClassworkResources"],
+    }),
   }),
   overrideExisting: false,
 });
@@ -42,4 +61,5 @@ export const {
   useGetClassroomResourcesQuery,
   useUploadResourceMutation,
   useDeleteResourceMutation,
+  useUpdateResourceMutation,
 } = classworksApi;
