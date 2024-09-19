@@ -1,0 +1,63 @@
+import { useState } from "react";
+
+import { Button, Collapse, Flex, SimpleGrid, Title, Loader } from "@mantine/core";
+import { FaChevronRight, FaChevronDown } from "react-icons/fa6";
+
+import { useGetClassroomResourcesQuery } from "@/shared/redux/rtk-apis/classworks/classworks.api";
+
+import ResourceCard from "../ResourceCard/ResourceCard";
+import { IResourcesProps } from "./Resources.interface";
+import { useStyles } from "./Resources.styles";
+
+const Resources: React.FC<IResourcesProps> = ({ classroomId }) => {
+  const { classes } = useStyles();
+  const [toggleMaterialsCollapse, setToggleMaterialsCollapse] = useState(true);
+
+  const { data: uploadedMaterials, isLoading, error } = useGetClassroomResourcesQuery(classroomId);
+
+  return (
+    <>
+      <Flex>
+        <Button
+          variant="subtle"
+          size="compact"
+          leftIcon={
+            toggleMaterialsCollapse ? (
+              <FaChevronDown color="white" />
+            ) : (
+              <FaChevronRight color="white" />
+            )
+          }
+          className={classes.titleButton}
+          onClick={() => setToggleMaterialsCollapse(!toggleMaterialsCollapse)}
+        >
+          <Title my={"md"} order={3} className={classes.collapseTitle}>
+            Materials
+          </Title>
+        </Button>
+      </Flex>
+
+      <Collapse in={toggleMaterialsCollapse} transitionDuration={0} animateOpacity={false}>
+        {isLoading ? (
+          <Loader size="sm" />
+        ) : error ? (
+          <Title order={4} className={classes.errorTitle}>
+            Failed to load materials.
+          </Title>
+        ) : uploadedMaterials && uploadedMaterials.length !== 0 ? (
+          <SimpleGrid px={{ base: "", xs: "sm" }}>
+            {uploadedMaterials.map((resource) => (
+              <ResourceCard resource={resource} key={resource.id} />
+            ))}
+          </SimpleGrid>
+        ) : (
+          <Title order={4} className={classes.noMaterialsTitle}>
+            No Materials available
+          </Title>
+        )}
+      </Collapse>
+    </>
+  );
+};
+
+export default Resources;
