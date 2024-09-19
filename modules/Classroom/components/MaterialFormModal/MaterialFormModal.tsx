@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -16,48 +16,88 @@ import { showNotification } from "@mantine/notifications";
 import { useForm, Controller } from "react-hook-form";
 
 import { ApiError } from "@/modules/Login/containers/LoginContainer.types";
-import { useUploadResourceMutation } from "@/shared/redux/rtk-apis/classworks/classworks.api";
+import {
+  useUploadResourceMutation,
+  useUpdateResourceMutation,
+} from "@/shared/redux/rtk-apis/classworks/classworks.api";
 
-import { materialFormSchema, TMaterialFormValues } from "./MaterialFormModal.helpers";
+import {
+  materialFormSchema,
+  TMaterialFormValues,
+  editMaterialFormSchema,
+} from "./MaterialFormModal.helpers";
 import { IMaterialFormModalProps } from "./MaterialFormModal.interface";
 import { inputStyles } from "./MaterialFormModal.styles";
 
-const MaterialFormModal: React.FC<IMaterialFormModalProps> = ({ opened, onClose, classroomId }) => {
+const MaterialFormModal: React.FC<IMaterialFormModalProps> = ({
+  opened,
+  onClose,
+  classroomId,
+  resource,
+}) => {
   const {
     control,
     handleSubmit,
     register,
     formState: { errors },
     reset,
+    setValue,
   } = useForm<TMaterialFormValues>({
-    resolver: zodResolver(materialFormSchema),
+    resolver: zodResolver(resource ? editMaterialFormSchema : materialFormSchema),
     mode: "onBlur",
   });
 
   const [isLoading, setIsLoading] = useState(false);
   const [uploadResource] = useUploadResourceMutation();
+  const [updateResource] = useUpdateResourceMutation();
+
+  useEffect(() => {
+    if (resource) {
+      setValue("title", resource.title);
+      setValue("description", resource.description);
+    }
+  }, [resource, setValue]);
 
   const onSubmit = async (data: TMaterialFormValues) => {
     setIsLoading(true);
     try {
-      await uploadResource({
-        file: data.file,
-        classroomId,
-        title: data.title,
-        description: data.description,
-      }).unwrap();
+      if (resource) {
+        await updateResource({
+          classroomId,
+          resourceId: resource.id,
+          data: {
+            classroomId: classroomId,
+            file: data.file,
+            title: data.title,
+            description: data.description,
+          },
+        }).unwrap();
 
-      showNotification({
-        title: "Success",
-        message: "Resource uploaded successfully!",
-        color: "blue",
-      });
+        showNotification({
+          title: "Success",
+          message: "Resource updated successfully!",
+          color: "blue",
+        });
+      } else {
+        await uploadResource({
+          file: data.file,
+          classroomId,
+          title: data.title,
+          description: data.description,
+        }).unwrap();
+
+        showNotification({
+          title: "Success",
+          message: "Resource uploaded successfully!",
+          color: "blue",
+        });
+      }
 
       reset();
       onClose();
     } catch (error) {
       showNotification({
-        title: "Upload failed",
+        title: resource ? "Update failed" : "Upload failed",
         message: (error as ApiError).data?.message,
         color: "red",
       });
@@ -75,7 +115,7 @@ const MaterialFormModal: React.FC<IMaterialFormModalProps> = ({ opened, onClose,
     <Modal opened={opened} onClose={handleCancel} size="md" centered>
       <Box mx="xl">
         <Text mb={20} fw={700} tt="uppercase" size="lg" c="#4CAF50">
-          Upload Material
+          {resource ? "Edit Material" : "Upload Material"}
         </Text>
         <form onSubmit={handleSubmit(onSubmit)}>
           <SimpleGrid>
@@ -130,7 +170,7 @@ const MaterialFormModal: React.FC<IMaterialFormModalProps> = ({ opened, onClose,
               style={{ backgroundColor: "#4CAF50", color: "white" }}
               loading={isLoading}
             >
-              Create
+              {resource ? "Update" : "Create"}
             </Button>
           </Group>
         </form>
