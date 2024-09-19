@@ -1,17 +1,39 @@
 import { Card, Flex, Text, Button, Group, Menu, ActionIcon } from "@mantine/core";
+import { showNotification } from "@mantine/notifications";
 import { AiOutlineBook } from "react-icons/ai";
 import { FaDownload } from "react-icons/fa";
 import { HiDotsHorizontal } from "react-icons/hi";
 
+import { ApiError } from "@/modules/Login/containers/LoginContainer.types";
 import { useAppSelector } from "@/shared/redux/hooks";
 import { selectAuthenticatedUser } from "@/shared/redux/reducers/user.reducer";
+import { useDeleteResourceMutation } from "@/shared/redux/rtk-apis/classworks/classworks.api";
 
 import { IResourceCardProps } from "./ResourceCard.interface";
 import { useStyles } from "./ResourceCard.styles";
 
-const ResourceCard: React.FC<IResourceCardProps> = ({ resource }) => {
+const ResourceCard: React.FC<IResourceCardProps> = ({ resource, classroomId }) => {
   const { classes } = useStyles();
   const user = useAppSelector(selectAuthenticatedUser);
+
+  const [deleteResource] = useDeleteResourceMutation();
+
+  const handleDelete = async () => {
+    try {
+      await deleteResource({ classroomId: classroomId, resourceId: resource.id }).unwrap();
+      showNotification({
+        title: "Success",
+        message: "Resource deleted successfully.",
+        color: "blue",
+      });
+    } catch (error) {
+      showNotification({
+        title: "Error",
+        message: (error as ApiError).data?.message,
+        color: "red",
+      });
+    }
+  };
 
   return (
     <Card my={"md"} px={{ base: "xs", sm: "md", md: "lg" }} className={classes.card}>
@@ -25,7 +47,9 @@ const ResourceCard: React.FC<IResourceCardProps> = ({ resource }) => {
 
           <Menu.Dropdown>
             <Menu.Item>Edit</Menu.Item>
-            <Menu.Item>Delete</Menu.Item>
+            <Menu.Item color="red" onClick={handleDelete}>
+              Delete
+            </Menu.Item>
           </Menu.Dropdown>
         </Menu>
       )}
