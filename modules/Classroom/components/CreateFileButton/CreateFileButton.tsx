@@ -9,6 +9,7 @@ import {
   AiOutlineBook,
 } from "react-icons/ai";
 
+import CreateExamFormModal from "../CreateExamFormModal/CreateExamFormModal";
 import MaterialFormModal from "../MaterialFormModal/MaterialFormModal";
 import { ICreateFileButtonProps } from "./CreateFileButton.interface";
 import { useStyles } from "./CreateFileButton.styles";
@@ -17,6 +18,7 @@ const CreateFileButton: React.FC<ICreateFileButtonProps> = ({ classroom }) => {
   const { classes } = useStyles();
   const [openCreateButton, setOpenCreateButton] = useState(false);
   const [openMaterialModal, setOpenMaterialModal] = useState(false);
+  const [openExamModal, setOpenExamModal] = useState(false);
 
   return (
     <Box my="xl">
@@ -39,6 +41,7 @@ const CreateFileButton: React.FC<ICreateFileButtonProps> = ({ classroom }) => {
               radius="md"
               leftIcon={<AiOutlineSchedule />}
               className={classes.button}
+              onClick={() => setOpenExamModal(true)}
             >
               <Text fw={400}>Schedule Exam</Text>
             </Button>
@@ -66,6 +69,11 @@ const CreateFileButton: React.FC<ICreateFileButtonProps> = ({ classroom }) => {
       <MaterialFormModal
         opened={openMaterialModal}
         onClose={() => setOpenMaterialModal(false)}
+        classroomId={classroom.id}
+      />
+      <CreateExamFormModal
+        opened={openExamModal}
+        onClose={() => setOpenExamModal(false)}
         classroomId={classroom.id}
       />
     </Box>
