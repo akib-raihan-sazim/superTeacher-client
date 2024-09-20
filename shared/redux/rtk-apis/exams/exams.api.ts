@@ -27,8 +27,22 @@ const examsApi = projectApi.injectEndpoints({
       }),
       invalidatesTags: ["Exams"],
     }),
+
+    updateExam: builder.mutation<void, { examId: number; data: CreateExamDto }>({
+      query: ({ examId, data }) => ({
+        url: `/classrooms/exams/${examId}`,
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: ["Exams"],
+    }),
   }),
   overrideExisting: false,
 });
 
-export const { useCreateExamMutation, useGetExamsQuery, useDeleteExamMutation } = examsApi;
+export const {
+  useCreateExamMutation,
+  useGetExamsQuery,
+  useDeleteExamMutation,
+  useUpdateExamMutation,
+} = examsApi;
