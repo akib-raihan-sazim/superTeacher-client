@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 
 import { Card, Flex, Text, Group, Menu, ActionIcon, Tooltip } from "@mantine/core";
 import dayjs from "dayjs";
@@ -10,6 +10,7 @@ import { useAppSelector } from "@/shared/redux/hooks";
 import { selectAuthenticatedUser } from "@/shared/redux/reducers/user.reducer";
 
 import ConfirmDeleteExamModal from "../ConfirmDeleteExamModal/ConfirmDeleteExamModal";
+import CreateExamFormModal from "../CreateExamFormModal/CreateExamFormModal";
 import { IExamCardProps } from "./ExamCard.interface";
 import { useStyles } from "./ExamCard.styles";
 
@@ -17,6 +18,15 @@ const ExamCard: React.FC<IExamCardProps> = ({ exam, isPast }) => {
   const { classes } = useStyles();
   const user = useAppSelector(selectAuthenticatedUser);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
+  const handleEditClick = () => {
+    setIsEditModalOpen(true);
+  };
+
+  const handleEditClose = () => {
+    setIsEditModalOpen(false);
+  };
 
   return (
     <>
@@ -34,7 +44,7 @@ const ExamCard: React.FC<IExamCardProps> = ({ exam, isPast }) => {
             </Menu.Target>
 
             <Menu.Dropdown>
-              <Menu.Item>Edit</Menu.Item>
+              <Menu.Item onClick={handleEditClick}>Edit</Menu.Item>
               <Menu.Item color="red" onClick={() => setIsDeleteModalOpen(true)}>
                 Delete
               </Menu.Item>
@@ -78,6 +88,17 @@ const ExamCard: React.FC<IExamCardProps> = ({ exam, isPast }) => {
         examId={exam.id}
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
+      />
+      <CreateExamFormModal
+        opened={isEditModalOpen}
+        onClose={handleEditClose}
+        examId={exam.id}
+        examData={{
+          title: exam.title,
+          instruction: exam.instruction,
+          date: new Date(exam.date),
+        }}
+        isEditMode={true}
       />
     </>
   );
