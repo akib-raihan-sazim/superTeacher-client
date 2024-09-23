@@ -32,7 +32,7 @@ const ClassroomNav: React.FC<IClassroomNavProps> = ({ classroom }) => {
         <StreamContainer classroom={classroom} />
       </Tabs.Panel>
       <Tabs.Panel value="classwork">
-        <ClassworkContainer />
+        <ClassworkContainer classroom={classroom} />
       </Tabs.Panel>
       <Tabs.Panel value="people">
         <PeopleContainer classroom={classroom} />
