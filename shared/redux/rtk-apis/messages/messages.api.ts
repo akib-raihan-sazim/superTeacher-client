@@ -14,7 +14,7 @@ const messagesApi = projectApi.injectEndpoints({
 
     getClassroomMessages: builder.query<IMessage[], number>({
       query: (classroomId) => ({
-        url: `/messages/classroom/${classroomId}`,
+        url: `/messages/classroom/${classroomId}/messages`,
         method: "GET",
       }),
       providesTags: ["Messages"],
