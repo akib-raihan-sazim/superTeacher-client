@@ -11,6 +11,7 @@ import { selectAuthenticatedUser } from "@/shared/redux/reducers/user.reducer";
 
 import ConfirmDeleteAssignmentModal from "../ConfirmDeleteAssignmentModal/ConfirmDeleteAssignmentModal";
 import CreateAssignmentFormModal from "../CreateAssignmentFormModal/CreateAssignmentFormModal";
+import SubmitAssignmentModal from "../SubmitAssignmentModal/SubmitAssignmentModal";
 import { IAssignmentCardProps } from "./AssignmentCard.interface";
 import { useStyles } from "./AssignmentCard.styles";
 
@@ -18,6 +19,7 @@ const AssignmentCard: React.FC<IAssignmentCardProps> = ({ assignment, classroomI
   const user = useAppSelector(selectAuthenticatedUser);
   const [editModalOpened, setEditModalOpened] = useState(false);
   const [deleteModalOpened, setDeleteModalOpened] = useState(false);
+  const [submitModalOpened, setSubmitModalOpened] = useState(false);
   const { classes } = useStyles();
 
   return (
@@ -66,7 +68,9 @@ const AssignmentCard: React.FC<IAssignmentCardProps> = ({ assignment, classroomI
           {user?.userType === "teacher" ? (
             <Button className={classes.submissionButton}>Submissions</Button>
           ) : (
-            <Button className={classes.submissionButton}>Submit</Button>
+            <Button className={classes.submissionButton} onClick={() => setSubmitModalOpened(true)}>
+              Submit
+            </Button>
           )}
         </Group>
       </Card>
@@ -84,6 +88,15 @@ const AssignmentCard: React.FC<IAssignmentCardProps> = ({ assignment, classroomI
         isOpen={deleteModalOpened}
         onClose={() => setDeleteModalOpened(false)}
       />
+      {user?.userId && (
+        <SubmitAssignmentModal
+          opened={submitModalOpened}
+          onClose={() => setSubmitModalOpened(false)}
+          assignmentId={assignment.id}
+          classroomId={classroomId}
+          userId={user.userId}
+        />
+      )}
     </>
   );
 };
