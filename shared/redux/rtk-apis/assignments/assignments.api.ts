@@ -1,5 +1,10 @@
 import { projectApi } from "../api.config";
-import { AssignmentsResponseDto, CreateAssignmentDto } from "./assignments.interface";
+import {
+  AssignmentsResponseDto,
+  CreateAssignmentDto,
+  IApiSubmissionResponse,
+  StudentResponseDto,
+} from "./assignments.interface";
 
 const assignmentsApi = projectApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -76,6 +81,23 @@ const assignmentsApi = projectApi.injectEndpoints({
       },
       invalidatesTags: (_, __, { classroomId }) => [{ type: "Assignments", id: classroomId }],
     }),
+
+    getAssignmentSubmissions: builder.query<
+      StudentResponseDto[],
+      { assignmentId: number; classroomId: number }
+    >({
+      query: ({ assignmentId, classroomId }) => ({
+        url: `classrooms/${classroomId}/assignments/${assignmentId}/submissions`,
+        method: "GET",
+      }),
+      transformResponse: (response: IApiSubmissionResponse[]): StudentResponseDto[] =>
+        response.map((submission) => ({
+          firstName: submission.student.user.firstName.trim(),
+          lastName: submission.student.user.lastName.trim(),
+          fileUrl: submission.fileUrl,
+          createdAt: submission.createdAt,
+        })),
+    }),
   }),
   overrideExisting: false,
 });
@@ -86,4 +108,5 @@ export const {
   useUpdateAssignmentMutation,
   useDeleteAssignmentMutation,
   useSubmitAssignmentMutation,
+  useGetAssignmentSubmissionsQuery,
 } = assignmentsApi;
