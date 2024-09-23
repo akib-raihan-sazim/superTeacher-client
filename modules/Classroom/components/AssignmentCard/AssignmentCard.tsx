@@ -9,6 +9,7 @@ import { HiDotsHorizontal } from "react-icons/hi";
 import { useAppSelector } from "@/shared/redux/hooks";
 import { selectAuthenticatedUser } from "@/shared/redux/reducers/user.reducer";
 
+import ConfirmDeleteAssignmentModal from "../ConfirmDeleteAssignmentModal/ConfirmDeleteAssignmentModal";
 import CreateAssignmentFormModal from "../CreateAssignmentFormModal/CreateAssignmentFormModal";
 import { IAssignmentCardProps } from "./AssignmentCard.interface";
 import { useStyles } from "./AssignmentCard.styles";
@@ -16,6 +17,7 @@ import { useStyles } from "./AssignmentCard.styles";
 const AssignmentCard: React.FC<IAssignmentCardProps> = ({ assignment, classroomId }) => {
   const user = useAppSelector(selectAuthenticatedUser);
   const [editModalOpened, setEditModalOpened] = useState(false);
+  const [deleteModalOpened, setDeleteModalOpened] = useState(false);
   const { classes } = useStyles();
 
   return (
@@ -31,7 +33,9 @@ const AssignmentCard: React.FC<IAssignmentCardProps> = ({ assignment, classroomI
 
             <Menu.Dropdown>
               <Menu.Item onClick={() => setEditModalOpened(true)}>Edit</Menu.Item>
-              <Menu.Item color="red">Delete</Menu.Item>
+              <Menu.Item color="red" onClick={() => setDeleteModalOpened(true)}>
+                Delete
+              </Menu.Item>
             </Menu.Dropdown>
           </Menu>
         )}
@@ -72,6 +76,13 @@ const AssignmentCard: React.FC<IAssignmentCardProps> = ({ assignment, classroomI
         onClose={() => setEditModalOpened(false)}
         classroomId={classroomId}
         assignment={assignment}
+      />
+
+      <ConfirmDeleteAssignmentModal
+        classroomId={classroomId}
+        assignmentId={assignment.id}
+        isOpen={deleteModalOpened}
+        onClose={() => setDeleteModalOpened(false)}
       />
     </>
   );
