@@ -5,7 +5,7 @@ const classworksApi = projectApi.injectEndpoints({
   endpoints: (builder) => ({
     getClassroomResources: builder.query<IClassworkResource[], number>({
       query: (classroomId) => ({
-        url: `/classworks/${classroomId}/resources`,
+        url: `/classrooms/${classroomId}/resources`,
         method: "GET",
       }),
       providesTags: ["ClassworkResources"],
@@ -19,7 +19,7 @@ const classworksApi = projectApi.injectEndpoints({
         formData.append("description", description);
 
         return {
-          url: `/classworks/${classroomId}/resources`,
+          url: `/classrooms/${classroomId}/resources`,
           method: "POST",
           body: formData,
         };
@@ -29,7 +29,7 @@ const classworksApi = projectApi.injectEndpoints({
 
     deleteResource: builder.mutation<void, { classroomId: number; resourceId: number }>({
       query: ({ classroomId, resourceId }) => ({
-        url: `/classworks/${classroomId}/resources/${resourceId}`,
+        url: `/classrooms/${classroomId}/resources/${resourceId}`,
         method: "DELETE",
       }),
       invalidatesTags: ["ClassworkResources"],
@@ -46,7 +46,7 @@ const classworksApi = projectApi.injectEndpoints({
         formData.append("description", data.description);
 
         return {
-          url: `/classworks/${classroomId}/resources/${resourceId}`,
+          url: `/classrooms/${classroomId}/resources/${resourceId}`,
           method: "PUT",
           body: formData,
         };

@@ -6,6 +6,7 @@ import { TRootState } from "@/shared/redux/store";
 import { EUserRole, TTokenizedUser } from "../rtk-apis/auth/auth.types";
 
 interface IAuthenticatedUser {
+  id: number | null;
   userId: number | null;
   email: string | null;
   firstName: string | null;
@@ -13,6 +14,7 @@ interface IAuthenticatedUser {
 }
 
 const initialState: IAuthenticatedUser = {
+  id: null,
   userId: null,
   email: null,
   firstName: null,
@@ -24,12 +26,14 @@ export const authenticatedUserSlice = createSlice({
   initialState,
   reducers: {
     setUser: (state, action: PayloadAction<TTokenizedUser>) => {
+      state.id = action.payload.id;
       state.email = action.payload.email;
       state.firstName = action.payload.firstName;
       state.userType = action.payload.userType;
       state.userId = action.payload.id;
     },
     clearUser: (state) => {
+      state.id = null;
       state.email = null;
       state.firstName = null;
       state.userType = null;
