@@ -3,6 +3,14 @@ import { CreateResourceDto, IClassworkResource } from "./classworks.interface";
 
 const classworksApi = projectApi.injectEndpoints({
   endpoints: (builder) => ({
+    getClassroomResources: builder.query<IClassworkResource[], number>({
+      query: (classroomId) => ({
+        url: `/classworks/${classroomId}/resources`,
+        method: "GET",
+      }),
+      providesTags: ["ClassworkResources"],
+    }),
+
     uploadResource: builder.mutation<IClassworkResource, CreateResourceDto>({
       query: ({ file, classroomId, title, description }) => {
         const formData = new FormData();
@@ -16,9 +24,10 @@ const classworksApi = projectApi.injectEndpoints({
           body: formData,
         };
       },
+      invalidatesTags: ["ClassworkResources"],
     }),
   }),
   overrideExisting: false,
 });
 
-export const { useUploadResourceMutation } = classworksApi;
+export const { useGetClassroomResourcesQuery, useUploadResourceMutation } = classworksApi;
