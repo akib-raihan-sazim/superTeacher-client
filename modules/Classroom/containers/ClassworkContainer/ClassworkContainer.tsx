@@ -15,11 +15,16 @@ const ClassworkContainer: React.FC<IClassworkContainerProps> = ({ classroom }) =
     <Box py="sm" px={{ base: 0, sm: "xl" }}>
       {user.userType === "teacher" && <CreateFileButton classroom={classroom} />}
       <Title order={2} c={"white"} py={"md"}>
+        Exams
+      </Title>
+      <Divider my="sm" />
+      <ExamList classroomId={classroom.id} />
+      <Title order={2} c={"white"} py={"md"}>
         Uploaded Resources
       </Title>
       <Divider my="sm" />
       <Resources classroomId={classroom.id} />
-      <ExamList classroomId={classroom.id} />
+
       <AssignmentList classroomId={classroom.id} />
     </Box>
   );

@@ -70,7 +70,7 @@ const ExamCard: React.FC<IExamCardProps> = ({ exam, isPast }) => {
             </Text>
           </Text>
         </Group>
-        {isPast && (
+        {isPast && user.userType === "teacher" && (
           <Tooltip
             label="To reschedule this exam, edit the due date and set it to a future date."
             position="right"

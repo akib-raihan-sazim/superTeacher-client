@@ -16,7 +16,10 @@ const StudentSearchModal: React.FC<StudentSearchModalProps> = ({
   onClose,
   classroomId,
 }) => {
-  const { data: unenrolledStudents, isLoading } = useGetUnenrolledStudentsQuery({ classroomId });
+  const { data: unenrolledStudents, isLoading } = useGetUnenrolledStudentsQuery(
+    { classroomId },
+    { skip: !classroomId },
+  );
   const {
     control,
     handleSubmit,

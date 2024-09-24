@@ -53,6 +53,14 @@ const classworksApi = projectApi.injectEndpoints({
       },
       invalidatesTags: ["ClassworkResources"],
     }),
+
+    getResourceDownloadUrl: builder.query<string, { classroomId: number; resourceId: number }>({
+      query: ({ classroomId, resourceId }) => ({
+        url: `/classrooms/${classroomId}/resources/${resourceId}/download`,
+        responseHandler: (response) => response.text(),
+      }),
+      transformResponse: (responseData: string) => responseData,
+    }),
   }),
   overrideExisting: false,
 });
@@ -62,4 +70,5 @@ export const {
   useUploadResourceMutation,
   useDeleteResourceMutation,
   useUpdateResourceMutation,
+  useGetResourceDownloadUrlQuery,
 } = classworksApi;

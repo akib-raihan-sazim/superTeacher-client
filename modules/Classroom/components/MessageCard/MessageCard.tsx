@@ -1,4 +1,4 @@
-import { Card, Text, Flex } from "@mantine/core";
+import { Card, Text, Flex, Badge } from "@mantine/core";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
@@ -16,6 +16,8 @@ const MessageCard: React.FC<IMessageCardProps> = ({ message }) => {
   const timeAgo = dayjs(createdAt).fromNow();
   const { classes } = useStyles({ userType: sender.userType });
 
+  const userTypeLabel = sender.userType === "teacher" ? "Teacher" : "Student";
+
   return (
     <Card className={classes.card}>
       <Flex direction={"column"} pb={"md"}>
@@ -26,6 +28,9 @@ const MessageCard: React.FC<IMessageCardProps> = ({ message }) => {
               (you)
             </Text>
           )}
+          <Badge c={"black"} style={{ background: "#F6F6F6", marginLeft: "8px" }}>
+            {userTypeLabel}
+          </Badge>
         </Text>
         <Text className={classes.time}>{timeAgo}</Text>
       </Flex>

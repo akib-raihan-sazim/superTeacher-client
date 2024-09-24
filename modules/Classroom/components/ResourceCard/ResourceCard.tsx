@@ -1,16 +1,15 @@
-import { useState } from "react";
+import React, { useState } from "react";
 
 import { Card, Flex, Text, Button, Group, Menu, ActionIcon } from "@mantine/core";
-import { showNotification } from "@mantine/notifications";
 import { AiOutlineBook } from "react-icons/ai";
 import { FaDownload } from "react-icons/fa";
 import { HiDotsHorizontal } from "react-icons/hi";
 
-import { ApiError } from "@/modules/Login/containers/LoginContainer.types";
 import { useAppSelector } from "@/shared/redux/hooks";
 import { selectAuthenticatedUser } from "@/shared/redux/reducers/user.reducer";
-import { useDeleteResourceMutation } from "@/shared/redux/rtk-apis/classworks/classworks.api";
+import { useGetResourceDownloadUrlQuery } from "@/shared/redux/rtk-apis/classworks/classworks.api";
 
+import ConfirmDeleteResourceModal from "../ConfirmDeleteResourceModal/ConfirmDeleteResourceModal";
 import MaterialFormModal from "../MaterialFormModal/MaterialFormModal";
 import { IResourceCardProps } from "./ResourceCard.interface";
 import { useStyles } from "./ResourceCard.styles";
@@ -18,43 +17,26 @@ import { useStyles } from "./ResourceCard.styles";
 const ResourceCard: React.FC<IResourceCardProps> = ({ resource, classroomId }) => {
   const { classes } = useStyles();
   const user = useAppSelector(selectAuthenticatedUser);
-  const [deleteResource] = useDeleteResourceMutation();
   const [editModalOpen, setEditModalOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
-  const handleDelete = async () => {
-    try {
-      await deleteResource({ classroomId: classroomId, resourceId: resource.id }).unwrap();
-      showNotification({
-        title: "Success",
-        message: "Resource deleted successfully.",
-        color: "blue",
-      });
-    } catch (error) {
-      showNotification({
-        title: "Error",
-        message: (error as ApiError).data?.message,
-        color: "red",
-      });
-    }
-  };
+  const {
+    data: downloadUrl,
+    isFetching,
+    isError,
+  } = useGetResourceDownloadUrlQuery(
+    { classroomId, resourceId: resource.id },
+    {
+      refetchOnMountOrArgChange: true,
+    },
+  );
 
   const handleDownload = () => {
-    if (resource.fileUrl) {
-      const link = document.createElement("a");
-      link.href = resource.fileUrl;
-      link.target = "_blank";
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
+    if (downloadUrl) {
+      window.open(downloadUrl, "_blank");
+    } else {
+      console.error("Download URL is undefined");
     }
-  };
-
-  const openEditModal = () => {
-    setEditModalOpen(true);
-  };
-
-  const closeEditModal = () => {
-    setEditModalOpen(false);
   };
 
   return (
@@ -69,8 +51,8 @@ const ResourceCard: React.FC<IResourceCardProps> = ({ resource, classroomId }) =
             </Menu.Target>
 
             <Menu.Dropdown>
-              <Menu.Item onClick={openEditModal}>Edit</Menu.Item>
-              <Menu.Item color="red" onClick={handleDelete}>
+              <Menu.Item onClick={() => setEditModalOpen(true)}>Edit</Menu.Item>
+              <Menu.Item color="red" onClick={() => setDeleteModalOpen(true)}>
                 Delete
               </Menu.Item>
             </Menu.Dropdown>
@@ -93,7 +75,9 @@ const ResourceCard: React.FC<IResourceCardProps> = ({ resource, classroomId }) =
             rightIcon={<FaDownload />}
             className={classes.downloadButton}
             size="compact-sm"
+            loading={isFetching}
             onClick={handleDownload}
+            disabled={isError || (!downloadUrl && !isFetching)}
           >
             Download
           </Button>
@@ -103,9 +87,18 @@ const ResourceCard: React.FC<IResourceCardProps> = ({ resource, classroomId }) =
       {editModalOpen && (
         <MaterialFormModal
           opened={editModalOpen}
-          onClose={closeEditModal}
+          onClose={() => setEditModalOpen(false)}
           classroomId={classroomId}
           resource={resource}
+        />
+      )}
+
+      {deleteModalOpen && (
+        <ConfirmDeleteResourceModal
+          resourceId={resource.id}
+          classroomId={classroomId}
+          isOpen={deleteModalOpen}
+          onClose={() => setDeleteModalOpen(false)}
         />
       )}
     </>
