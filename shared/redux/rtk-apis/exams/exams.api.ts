@@ -9,9 +9,18 @@ const examsApi = projectApi.injectEndpoints({
         method: "POST",
         body: data,
       }),
+      invalidatesTags: ["Exams"],
+    }),
+
+    getExams: builder.query<ExamResponseDto[], { classroomId: number }>({
+      query: ({ classroomId }) => ({
+        url: `/classrooms/${classroomId}/exams`,
+        method: "GET",
+      }),
+      providesTags: ["Exams"],
     }),
   }),
   overrideExisting: false,
 });
 
-export const { useCreateExamMutation } = examsApi;
+export const { useCreateExamMutation, useGetExamsQuery } = examsApi;
