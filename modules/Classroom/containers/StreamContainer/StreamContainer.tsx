@@ -1,6 +1,7 @@
 import { Box, Container, Grid } from "@mantine/core";
 
 import ClassroomDetails from "../../components/ClassroomDetails/ClassroomDetails";
+import ClassroomMeetlink from "../../components/ClassroomMeetlink/ClassroomMeetlink";
 import MessageList from "../../components/MessageList/MessageList";
 import SendMessageForm from "../../components/SendMessageForm/SendMessageForm";
 import StreamHeader from "../../components/StreamHeader/StreamHeader";
@@ -17,6 +18,7 @@ const StreamContainer: React.FC<IStreamContainerProps> = ({ classroom }) => {
         <Container className={classes.innerContainer}>
           <Grid>
             <Grid.Col span={3} className={classes.detailsColumn}>
+              <ClassroomMeetlink />
               <ClassroomDetails classroom={classroom} />
             </Grid.Col>
             <Grid.Col span={12} className={classes.formColumn}>

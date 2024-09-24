@@ -26,4 +26,10 @@ export const useStyles = createStyles(() => ({
     color: "#151d35",
     border: "1px solid #151d35",
   },
+
+  submitButton: {
+    backgroundColor: "#4CAF50",
+    color: "white",
+    border: "1px solid #4CAF50",
+  },
 }));

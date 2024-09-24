@@ -101,7 +101,7 @@ const AssignmentCard: React.FC<IAssignmentCardProps> = ({ assignment, classroomI
               Submitted
             </Button>
           ) : (
-            <Button className={classes.submissionButton} onClick={() => setSubmitModalOpened(true)}>
+            <Button className={classes.submitButton} onClick={() => setSubmitModalOpened(true)}>
               Submit
             </Button>
           )}

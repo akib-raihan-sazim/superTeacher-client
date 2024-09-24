@@ -38,6 +38,17 @@ const ResourceCard: React.FC<IResourceCardProps> = ({ resource, classroomId }) =
     }
   };
 
+  const handleDownload = () => {
+    if (resource.fileUrl) {
+      const link = document.createElement("a");
+      link.href = resource.fileUrl;
+      link.target = "_blank";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    }
+  };
+
   const openEditModal = () => {
     setEditModalOpen(true);
   };
@@ -78,7 +89,12 @@ const ResourceCard: React.FC<IResourceCardProps> = ({ resource, classroomId }) =
         <Text my={"md"}>{resource.description}</Text>
 
         <Group position="right">
-          <Button rightIcon={<FaDownload />} className={classes.downloadButton} size="compact-sm">
+          <Button
+            rightIcon={<FaDownload />}
+            className={classes.downloadButton}
+            size="compact-sm"
+            onClick={handleDownload}
+          >
             Download
           </Button>
         </Group>
