@@ -5,4 +5,5 @@ export interface IResourceCardProps {
     description: string;
     fileUrl: string;
   };
+  classroomId: number;
 }

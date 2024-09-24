@@ -26,8 +26,20 @@ const classworksApi = projectApi.injectEndpoints({
       },
       invalidatesTags: ["ClassworkResources"],
     }),
+
+    deleteResource: builder.mutation<void, { classroomId: number; resourceId: number }>({
+      query: ({ classroomId, resourceId }) => ({
+        url: `/classworks/${classroomId}/resources/${resourceId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["ClassworkResources"],
+    }),
   }),
   overrideExisting: false,
 });
 
-export const { useGetClassroomResourcesQuery, useUploadResourceMutation } = classworksApi;
+export const {
+  useGetClassroomResourcesQuery,
+  useUploadResourceMutation,
+  useDeleteResourceMutation,
+} = classworksApi;

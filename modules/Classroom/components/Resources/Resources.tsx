@@ -58,7 +58,7 @@ const Resources: React.FC<IResourcesProps> = ({ classroomId }) => {
         ) : uploadedMaterials && uploadedMaterials.length !== 0 ? (
           <SimpleGrid px={{ base: "", xs: "sm" }}>
             {uploadedMaterials.map((resource) => (
-              <ResourceCard resource={resource} key={resource.id} />
+              <ResourceCard resource={resource} classroomId={classroomId} key={resource.id} />
             ))}
           </SimpleGrid>
         ) : (
