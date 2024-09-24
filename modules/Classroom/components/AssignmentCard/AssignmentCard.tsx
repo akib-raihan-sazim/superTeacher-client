@@ -8,6 +8,7 @@ import { HiDotsHorizontal } from "react-icons/hi";
 
 import { useAppSelector } from "@/shared/redux/hooks";
 import { selectAuthenticatedUser } from "@/shared/redux/reducers/user.reducer";
+import { useGetSubmissionStatusQuery } from "@/shared/redux/rtk-apis/assignments/assignments.api";
 
 import ConfirmDeleteAssignmentModal from "../ConfirmDeleteAssignmentModal/ConfirmDeleteAssignmentModal";
 import CreateAssignmentFormModal from "../CreateAssignmentFormModal/CreateAssignmentFormModal";
@@ -23,6 +24,21 @@ const AssignmentCard: React.FC<IAssignmentCardProps> = ({ assignment, classroomI
   const [submitModalOpened, setSubmitModalOpened] = useState(false);
   const [submissionsModalOpened, setSubmissionsModalOpened] = useState(false);
   const { classes } = useStyles();
+  const { data: submissionStatus } = useGetSubmissionStatusQuery(
+    { assignmentId: assignment.id, userId: user?.userId ?? 0 },
+    { skip: !user || user.userType !== "student" },
+  );
+
+  const handleDownload = () => {
+    if (assignment.fileUrl) {
+      const link = document.createElement("a");
+      link.href = assignment.fileUrl;
+      link.target = "_blank";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    }
+  };
 
   return (
     <>
@@ -56,10 +72,16 @@ const AssignmentCard: React.FC<IAssignmentCardProps> = ({ assignment, classroomI
         <Text my="md">{assignment.description}</Text>
 
         <Group position="right">
-          <Button rightIcon={<FaDownload />} className={classes.viewButton} size="compact-sm">
+          <Button
+            rightIcon={<FaDownload />}
+            className={classes.viewButton}
+            size="compact-sm"
+            onClick={handleDownload}
+          >
             Download
           </Button>
         </Group>
+
         <Group position="right" pt={"md"}>
           <Text>
             Due Date:
@@ -73,6 +95,10 @@ const AssignmentCard: React.FC<IAssignmentCardProps> = ({ assignment, classroomI
               onClick={() => setSubmissionsModalOpened(true)}
             >
               Submissions
+            </Button>
+          ) : submissionStatus?.submitted ? (
+            <Button className={classes.submissionButton} disabled>
+              Submitted
             </Button>
           ) : (
             <Button className={classes.submissionButton} onClick={() => setSubmitModalOpened(true)}>
