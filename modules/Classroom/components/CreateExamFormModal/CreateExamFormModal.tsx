@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Modal, Box, Text, SimpleGrid, TextInput, Button, Group } from "@mantine/core";
@@ -7,16 +7,23 @@ import { showNotification } from "@mantine/notifications";
 import { Controller, useForm } from "react-hook-form";
 
 import { ApiError } from "@/modules/Login/containers/LoginContainer.types";
-import { useCreateExamMutation } from "@/shared/redux/rtk-apis/exams/exams.api";
+import {
+  useCreateExamMutation,
+  useUpdateExamMutation,
+} from "@/shared/redux/rtk-apis/exams/exams.api";
 
 import { examFormSchema, TExamFormValues } from "./CreateExamFormModal.helpers";
+import { ICreateExamFormModalProps } from "./CreateExamFormModal.interface";
 import { formStyles, buttonStyles } from "./CreateExamFormModal.styles";
 
-const CreateExamFormModal: React.FC<{
-  opened: boolean;
-  onClose: () => void;
-  classroomId: number;
-}> = ({ opened, onClose, classroomId }) => {
+const CreateExamFormModal: React.FC<ICreateExamFormModalProps> = ({
+  opened,
+  onClose,
+  classroomId,
+  examId,
+  examData,
+  isEditMode = false,
+}) => {
   const {
     register,
     handleSubmit,
@@ -30,12 +37,34 @@ const CreateExamFormModal: React.FC<{
 
   const [isLoading, setIsLoading] = useState(false);
   const [createExam] = useCreateExamMutation();
+  const [updateExam] = useUpdateExamMutation();
+
+  useEffect(() => {
+    if (isEditMode && examData) {
+      reset(examData);
+    }
+  }, [isEditMode, examData, reset]);
 
   const onSubmit = async (data: TExamFormValues) => {
     setIsLoading(true);
     try {
-      await createExam({ classroomId, data }).unwrap();
-      showNotification({ title: "Success", message: "Exam created successfully!", color: "blue" });
+      if (isEditMode && examId) {
+        await updateExam({ examId, data }).unwrap();
+        showNotification({
+          title: "Success",
+          message: "Exam updated successfully!",
+          color: "blue",
+        });
+      } else {
+        if (classroomId) {
+          await createExam({ classroomId, data }).unwrap();
+          showNotification({
+            title: "Success",
+            message: "Exam created successfully!",
+            color: "blue",
+          });
+        }
+      }
       reset();
       onClose();
     } catch (error) {
@@ -58,7 +87,7 @@ const CreateExamFormModal: React.FC<{
     <Modal opened={opened} onClose={handleCancel} size="md" centered>
       <Box mx="xl">
         <Text mb={20} fw={700} tt="uppercase" size="lg" c={formStyles.label.color}>
-          Create Exam
+          {isEditMode ? "Edit Exam" : "Create Exam"}
         </Text>
         <form onSubmit={handleSubmit(onSubmit)}>
           <SimpleGrid>
@@ -100,7 +129,7 @@ const CreateExamFormModal: React.FC<{
               Cancel
             </Button>
             <Button type="submit" size="sm" loading={isLoading} style={buttonStyles}>
-              Create Exam
+              {isEditMode ? "Update Exam" : "Create Exam"}
             </Button>
           </Group>
         </form>
