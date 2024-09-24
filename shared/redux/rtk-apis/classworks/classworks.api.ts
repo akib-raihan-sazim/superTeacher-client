@@ -1,11 +1,11 @@
 import { projectApi } from "../api.config";
-import { CreateResourceDto, IClassworkResource } from "./classworks.interface";
+import { CreateResourceDto, IClassworkResource, UpdateResourceDto } from "./classworks.interface";
 
 const classworksApi = projectApi.injectEndpoints({
   endpoints: (builder) => ({
     getClassroomResources: builder.query<IClassworkResource[], number>({
       query: (classroomId) => ({
-        url: `/classworks/${classroomId}/resources`,
+        url: `/classrooms/${classroomId}/resources`,
         method: "GET",
       }),
       providesTags: ["ClassworkResources"],
@@ -19,7 +19,7 @@ const classworksApi = projectApi.injectEndpoints({
         formData.append("description", description);
 
         return {
-          url: `/classworks/${classroomId}/resources`,
+          url: `/classrooms/${classroomId}/resources`,
           method: "POST",
           body: formData,
         };
@@ -29,9 +29,28 @@ const classworksApi = projectApi.injectEndpoints({
 
     deleteResource: builder.mutation<void, { classroomId: number; resourceId: number }>({
       query: ({ classroomId, resourceId }) => ({
-        url: `/classworks/${classroomId}/resources/${resourceId}`,
+        url: `/classrooms/${classroomId}/resources/${resourceId}`,
         method: "DELETE",
       }),
+      invalidatesTags: ["ClassworkResources"],
+    }),
+
+    updateResource: builder.mutation<
+      IClassworkResource,
+      { classroomId: number; resourceId: number; data: UpdateResourceDto }
+    >({
+      query: ({ classroomId, resourceId, data }) => {
+        const formData = new FormData();
+        if (data.file) formData.append("file", data.file);
+        formData.append("title", data.title);
+        formData.append("description", data.description);
+
+        return {
+          url: `/classrooms/${classroomId}/resources/${resourceId}`,
+          method: "PUT",
+          body: formData,
+        };
+      },
       invalidatesTags: ["ClassworkResources"],
     }),
   }),
@@ -42,4 +61,5 @@ export const {
   useGetClassroomResourcesQuery,
   useUploadResourceMutation,
   useDeleteResourceMutation,
+  useUpdateResourceMutation,
 } = classworksApi;

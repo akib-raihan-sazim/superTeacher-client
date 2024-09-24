@@ -3,11 +3,18 @@ export interface IClassworkResource {
   title: string;
   description: string;
   fileUrl: string;
-  classroom: number;
+  classroom?: number;
 }
 
 export interface CreateResourceDto {
   file: File;
+  classroomId: number;
+  title: string;
+  description: string;
+}
+
+export interface UpdateResourceDto {
+  file?: File;
   classroomId: number;
   title: string;
   description: string;
