@@ -18,7 +18,7 @@ const StreamContainer: React.FC<IStreamContainerProps> = ({ classroom }) => {
         <Container className={classes.innerContainer}>
           <Grid>
             <Grid.Col span={3} className={classes.detailsColumn}>
-              <ClassroomMeetlink />
+              <ClassroomMeetlink meetlink={classroom.meetLink} classroomId={classroom.id} />
               <ClassroomDetails classroom={classroom} />
             </Grid.Col>
             <Grid.Col span={12} className={classes.formColumn}>
