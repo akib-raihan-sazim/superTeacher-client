@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import { Card, Flex, Text, Group, Button, Menu, ActionIcon } from "@mantine/core";
 import dayjs from "dayjs";
 import { AiOutlineFileText } from "react-icons/ai";
@@ -7,11 +9,13 @@ import { HiDotsHorizontal } from "react-icons/hi";
 import { useAppSelector } from "@/shared/redux/hooks";
 import { selectAuthenticatedUser } from "@/shared/redux/reducers/user.reducer";
 
+import CreateAssignmentFormModal from "../CreateAssignmentFormModal/CreateAssignmentFormModal";
 import { IAssignmentCardProps } from "./AssignmentCard.interface";
 import { useStyles } from "./AssignmentCard.styles";
 
-const AssignmentCard: React.FC<IAssignmentCardProps> = ({ assignment }) => {
+const AssignmentCard: React.FC<IAssignmentCardProps> = ({ assignment, classroomId }) => {
   const user = useAppSelector(selectAuthenticatedUser);
+  const [editModalOpened, setEditModalOpened] = useState(false);
   const { classes } = useStyles();
 
   return (
@@ -26,7 +30,7 @@ const AssignmentCard: React.FC<IAssignmentCardProps> = ({ assignment }) => {
             </Menu.Target>
 
             <Menu.Dropdown>
-              <Menu.Item>Edit</Menu.Item>
+              <Menu.Item onClick={() => setEditModalOpened(true)}>Edit</Menu.Item>
               <Menu.Item color="red">Delete</Menu.Item>
             </Menu.Dropdown>
           </Menu>
@@ -62,6 +66,13 @@ const AssignmentCard: React.FC<IAssignmentCardProps> = ({ assignment }) => {
           )}
         </Group>
       </Card>
+
+      <CreateAssignmentFormModal
+        opened={editModalOpened}
+        onClose={() => setEditModalOpened(false)}
+        classroomId={classroomId}
+        assignment={assignment}
+      />
     </>
   );
 };

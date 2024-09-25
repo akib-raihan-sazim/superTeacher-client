@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -16,55 +16,97 @@ import { DateInput } from "@mantine/dates";
 import { showNotification } from "@mantine/notifications";
 import { Controller, useForm } from "react-hook-form";
 
-import { useCreateAssignmentMutation } from "@/shared/redux/rtk-apis/assignments/assignments.api";
+import {
+  useCreateAssignmentMutation,
+  useUpdateAssignmentMutation,
+} from "@/shared/redux/rtk-apis/assignments/assignments.api";
 
-import { assignmentFormSchema, TAssignmentFormValues } from "./CreateAssignmentFormModal.helpers";
-import { ICreateAssignmentFormModalProps } from "./CreateAssignmentFormModal.interface";
+import {
+  assignmentFormSchema,
+  assignmentFormSchemaEdit,
+  TAssignmentFormValues,
+} from "./CreateAssignmentFormModal.helpers";
+import { IAssignmentFormModalProps } from "./CreateAssignmentFormModal.interface";
 import { formStyles, inputStyles } from "./CreateAssignmentFormModal.styles";
 
-const CreateAssignmentFormModal: React.FC<ICreateAssignmentFormModalProps> = ({
+const CreateAssignmentFormModal: React.FC<IAssignmentFormModalProps> = ({
   opened,
   onClose,
   classroomId,
+  assignment,
 }) => {
+  const isUpdateAssignment = Boolean(assignment);
+
   const {
     control,
     handleSubmit,
     register,
     formState: { errors },
     reset,
+    setValue,
   } = useForm<TAssignmentFormValues>({
-    resolver: zodResolver(assignmentFormSchema),
+    resolver: zodResolver(isUpdateAssignment ? assignmentFormSchemaEdit : assignmentFormSchema),
     mode: "onBlur",
   });
 
   const [isLoading, setIsLoading] = useState(false);
   const [createAssignment] = useCreateAssignmentMutation();
+  const [updateAssignment] = useUpdateAssignmentMutation();
+
+  useEffect(() => {
+    if (opened && assignment) {
+      setValue("title", assignment.title);
+      setValue("description", assignment.description);
+      setValue("dueDate", new Date(assignment.dueDate));
+    } else if (!isUpdateAssignment) {
+      reset();
+    }
+  }, [opened, assignment, setValue, reset, isUpdateAssignment]);
 
   const onSubmit = async (data: TAssignmentFormValues) => {
     setIsLoading(true);
     try {
-      await createAssignment({
-        classroomId,
-        data: {
-          file: data.file,
-          title: data.title,
-          description: data.description,
-          dueDate: data.dueDate,
-        },
-      }).unwrap();
+      if (isUpdateAssignment) {
+        await updateAssignment({
+          classroomId: classroomId,
+          assignmentId: assignment!.id,
+          data: {
+            file: data.file,
+            title: data.title,
+            description: data.description,
+            dueDate: data.dueDate,
+          },
+        }).unwrap();
 
-      showNotification({
-        title: "Success",
-        message: "Assignment created successfully!",
-        color: "blue",
-      });
+        showNotification({
+          title: "Success",
+          message: "Assignment updated successfully!",
+          color: "blue",
+        });
+      } else {
+        await createAssignment({
+          classroomId,
+          data: {
+            file: data.file,
+            title: data.title,
+            description: data.description,
+            dueDate: data.dueDate,
+          },
+        }).unwrap();
+
+        showNotification({
+          title: "Success",
+          message: "Assignment created successfully!",
+          color: "blue",
+        });
+      }
+
       reset();
       onClose();
     } catch (error) {
       showNotification({
-        title: "Assignment creation failed",
-        message: "Failed to create assignment",
+        title: isUpdateAssignment ? "Update failed" : "Creation failed",
+        message: isUpdateAssignment ? "Failed to update assignment" : "Failed to create assignment",
         color: "red",
       });
     } finally {
@@ -81,7 +123,7 @@ const CreateAssignmentFormModal: React.FC<ICreateAssignmentFormModalProps> = ({
     <Modal opened={opened} onClose={handleCancel} size="md" centered>
       <Box mx="xl">
         <Text mb={20} fw={700} tt="uppercase" size="lg" c="#4CAF50">
-          Create Assignment
+          {isUpdateAssignment ? "Edit Assignment" : "Create Assignment"}
         </Text>
         <form onSubmit={handleSubmit(onSubmit)}>
           <SimpleGrid>
@@ -152,7 +194,7 @@ const CreateAssignmentFormModal: React.FC<ICreateAssignmentFormModalProps> = ({
               style={{ backgroundColor: "#4CAF50", color: "white" }}
               loading={isLoading}
             >
-              Create
+              {isUpdateAssignment ? "Update" : "Create"}
             </Button>
           </Group>
         </form>

@@ -10,6 +10,6 @@ export interface AssignmentsResponseDto {
   title: string;
   description: string;
   fileUrl: string;
-  classroomId: number;
+  classroomId?: number;
   dueDate: Date;
 }

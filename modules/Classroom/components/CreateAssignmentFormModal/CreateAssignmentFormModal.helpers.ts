@@ -7,4 +7,9 @@ export const assignmentFormSchema = z.object({
   dueDate: z.date({ required_error: "Due date is required" }),
 });
 
+export const assignmentFormSchemaEdit = assignmentFormSchema.extend({
+  file: z.instanceof(File, { message: "File is optional" }).optional(),
+});
+
 export type TAssignmentFormValues = z.infer<typeof assignmentFormSchema>;
+export type TAssignmentFormValuesEdit = z.infer<typeof assignmentFormSchemaEdit>;
