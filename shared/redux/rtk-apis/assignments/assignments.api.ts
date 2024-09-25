@@ -20,10 +20,18 @@ const assignmentsApi = projectApi.injectEndpoints({
           body: formData,
         };
       },
-      invalidatesTags: ["Assignments"],
+      invalidatesTags: (_, __, { classroomId }) => [{ type: "Assignments", id: classroomId }],
+    }),
+
+    getClassroomAssignments: builder.query<AssignmentsResponseDto[], number>({
+      query: (classroomId) => ({
+        url: `/classrooms/${classroomId}/assignments`,
+        method: "GET",
+      }),
+      providesTags: (_, __, classroomId) => [{ type: "Assignments", id: classroomId }],
     }),
   }),
   overrideExisting: false,
 });
 
-export const { useCreateAssignmentMutation } = assignmentsApi;
+export const { useCreateAssignmentMutation, useGetClassroomAssignmentsQuery } = assignmentsApi;
