@@ -58,6 +58,24 @@ const assignmentsApi = projectApi.injectEndpoints({
       }),
       invalidatesTags: (_, __, { classroomId }) => [{ type: "Assignments", id: classroomId }],
     }),
+
+    submitAssignment: builder.mutation<
+      void,
+      { assignmentId: number; classroomId: number; userId: number; file: File }
+    >({
+      query: ({ classroomId, assignmentId, userId, file }) => {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("assignmentId", assignmentId.toString());
+        formData.append("userId", userId.toString());
+        return {
+          url: `classrooms/${classroomId}/assignments/${assignmentId}/submit-assignment`,
+          method: "POST",
+          body: formData,
+        };
+      },
+      invalidatesTags: (_, __, { classroomId }) => [{ type: "Assignments", id: classroomId }],
+    }),
   }),
   overrideExisting: false,
 });
@@ -67,4 +85,5 @@ export const {
   useGetClassroomAssignmentsQuery,
   useUpdateAssignmentMutation,
   useDeleteAssignmentMutation,
+  useSubmitAssignmentMutation,
 } = assignmentsApi;
