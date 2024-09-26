@@ -8,7 +8,7 @@ import { useAppSelector } from "@/shared/redux/hooks";
 import { selectAuthenticatedUser } from "@/shared/redux/reducers/user.reducer";
 
 import ConfirmDeleteMeetLinkModal from "../ConfirmDeleteMeetLinkModal/ConfirmDeleteMeetLinkModal";
-import UploadMeetlinkModal from "../UploadMeetLinkModal/UploadMeetLinkModal";
+import UploadMeetlinkModal from "../UploadOrEditMeetLinkModal/UploadOrEditMeetLinkModal";
 import { TClassroomMeetlinkProps } from "./ClassroomMeetlink.interface";
 import { useMeetlinkStyles } from "./ClassroomMeetlink.styles";
 
@@ -17,6 +17,12 @@ const ClassroomMeetlink = ({ meetlink, classroomId }: TClassroomMeetlinkProps) =
   const { classes } = useMeetlinkStyles();
   const [meetLinkModalOpened, setMeetLinkModalOpened] = useState(false);
   const [confirmDeleteModalOpened, setConfirmDeleteModalOpened] = useState(false);
+  const [initialMeetLink, setInitialMeetLink] = useState("");
+
+  const handleEditClick = () => {
+    setInitialMeetLink(meetlink || "");
+    setMeetLinkModalOpened(true);
+  };
 
   if (meetlink) {
     return (
@@ -28,7 +34,9 @@ const ClassroomMeetlink = ({ meetlink, classroomId }: TClassroomMeetlinkProps) =
           </Anchor>
           {user.userType === "teacher" ? (
             <>
-              <TbEditCircle />
+              <ActionIcon onClick={handleEditClick}>
+                <TbEditCircle className={classes.icon} color="black" />
+              </ActionIcon>
               <ActionIcon onClick={() => setConfirmDeleteModalOpened(true)}>
                 <FaTrashAlt className={classes.icon} color="black" />
               </ActionIcon>
@@ -39,6 +47,12 @@ const ClassroomMeetlink = ({ meetlink, classroomId }: TClassroomMeetlinkProps) =
           classroomId={classroomId}
           isOpen={confirmDeleteModalOpened}
           onClose={() => setConfirmDeleteModalOpened(false)}
+        />
+        <UploadMeetlinkModal
+          opened={meetLinkModalOpened}
+          onClose={() => setMeetLinkModalOpened(false)}
+          classroomId={classroomId}
+          initialValue={initialMeetLink}
         />
       </Box>
     );

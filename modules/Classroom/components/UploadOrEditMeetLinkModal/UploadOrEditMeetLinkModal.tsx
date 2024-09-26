@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Modal, Button, TextInput, Text, Group } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
@@ -5,14 +7,15 @@ import { useForm } from "react-hook-form";
 
 import { useUploadMeetLinkMutation } from "@/shared/redux/rtk-apis/classrooms/classrooms.api";
 
-import { meetlinkSchema, TMeetlinkFormValues } from "./UploadMeetLinkModal.helpers";
-import { IUploadMeetlinkModalProps } from "./UploadMeetLinkModal.interface";
-import { inputStyles, formStyles } from "./UploadMeetLinkModal.styles";
+import { meetlinkSchema, TMeetlinkFormValues } from "./UploadOrEditMeetLinkModal.helpers";
+import { IUploadMeetlinkModalProps } from "./UploadOrEditMeetLinkModal.interface";
+import { inputStyles, formStyles } from "./UploadOrEditMeetLinkModal.styles";
 
 const UploadMeetlinkModal: React.FC<IUploadMeetlinkModalProps> = ({
   opened,
   onClose,
   classroomId,
+  initialValue = "",
 }) => {
   const {
     control,
@@ -22,15 +25,25 @@ const UploadMeetlinkModal: React.FC<IUploadMeetlinkModalProps> = ({
   } = useForm<TMeetlinkFormValues>({
     resolver: zodResolver(meetlinkSchema),
     mode: "onBlur",
+    defaultValues: {
+      meetlink: initialValue,
+    },
   });
+
   const [uploadMeetLink] = useUploadMeetLinkMutation();
+
+  useEffect(() => {
+    if (opened) {
+      reset({ meetlink: initialValue });
+    }
+  }, [opened, initialValue, reset]);
 
   const onSubmit = async (data: TMeetlinkFormValues) => {
     try {
       await uploadMeetLink({ classroomId, meetlink: data.meetlink }).unwrap();
       showNotification({
         title: "Success",
-        message: "Meet link added successfully",
+        message: initialValue ? "Meet link updated successfully" : "Meet link added successfully",
         color: "blue",
       });
 
@@ -53,7 +66,7 @@ const UploadMeetlinkModal: React.FC<IUploadMeetlinkModalProps> = ({
   return (
     <Modal opened={opened} onClose={handleCancel} centered>
       <Text mb={20} fw={700} tt="uppercase" size="lg" c="#4CAF50">
-        Upload Meet Link
+        {initialValue ? "Edit Meet Link" : "Upload Meet Link"}
       </Text>
       <form onSubmit={handleSubmit(onSubmit)}>
         <TextInput
