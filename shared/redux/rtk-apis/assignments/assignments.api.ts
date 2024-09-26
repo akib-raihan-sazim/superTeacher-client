@@ -50,6 +50,14 @@ const assignmentsApi = projectApi.injectEndpoints({
       },
       invalidatesTags: (_, __, { classroomId }) => [{ type: "Assignments", id: classroomId }],
     }),
+
+    deleteAssignment: builder.mutation<void, { classroomId: number; assignmentId: number }>({
+      query: ({ assignmentId, classroomId }) => ({
+        url: `/classrooms/${classroomId}/assignments/${assignmentId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: (_, __, { classroomId }) => [{ type: "Assignments", id: classroomId }],
+    }),
   }),
   overrideExisting: false,
 });
@@ -58,4 +66,5 @@ export const {
   useCreateAssignmentMutation,
   useGetClassroomAssignmentsQuery,
   useUpdateAssignmentMutation,
+  useDeleteAssignmentMutation,
 } = assignmentsApi;
