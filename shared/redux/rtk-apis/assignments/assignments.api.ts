@@ -1,10 +1,5 @@
 import { projectApi } from "../api.config";
-import {
-  AssignmentsResponseDto,
-  CreateAssignmentDto,
-  IApiSubmissionResponse,
-  StudentResponseDto,
-} from "./assignments.interface";
+import { AssignmentsResponseDto, CreateAssignmentDto } from "./assignments.interface";
 
 const assignmentsApi = projectApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -63,51 +58,6 @@ const assignmentsApi = projectApi.injectEndpoints({
       }),
       invalidatesTags: (_, __, { classroomId }) => [{ type: "Assignments", id: classroomId }],
     }),
-
-    submitAssignment: builder.mutation<
-      void,
-      { assignmentId: number; classroomId: number; userId: number; file: File }
-    >({
-      query: ({ classroomId, assignmentId, userId, file }) => {
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append("assignmentId", assignmentId.toString());
-        formData.append("userId", userId.toString());
-        return {
-          url: `classrooms/${classroomId}/assignments/${assignmentId}/submit-assignment`,
-          method: "POST",
-          body: formData,
-        };
-      },
-      invalidatesTags: (_, __, { classroomId }) => [{ type: "Assignments", id: classroomId }],
-    }),
-
-    getAssignmentSubmissions: builder.query<
-      StudentResponseDto[],
-      { assignmentId: number; classroomId: number }
-    >({
-      query: ({ assignmentId, classroomId }) => ({
-        url: `classrooms/${classroomId}/assignments/${assignmentId}/submissions`,
-        method: "GET",
-      }),
-      providesTags: ["Assignments"],
-      transformResponse: (response: IApiSubmissionResponse[]): StudentResponseDto[] =>
-        response.map((submission) => ({
-          firstName: submission.student.user.firstName.trim(),
-          lastName: submission.student.user.lastName.trim(),
-          fileUrl: submission.fileUrl,
-          createdAt: submission.createdAt,
-        })),
-    }),
-
-    getSubmissionStatus: builder.query<
-      { submitted: boolean },
-      { assignmentId: number; userId: number }
-    >({
-      query: ({ assignmentId, userId }) =>
-        `/assignments/${assignmentId}/user/${userId}/submission-status`,
-      providesTags: ["Assignments"],
-    }),
   }),
   overrideExisting: false,
 });
@@ -117,7 +67,4 @@ export const {
   useGetClassroomAssignmentsQuery,
   useUpdateAssignmentMutation,
   useDeleteAssignmentMutation,
-  useSubmitAssignmentMutation,
-  useGetAssignmentSubmissionsQuery,
-  useGetSubmissionStatusQuery,
 } = assignmentsApi;

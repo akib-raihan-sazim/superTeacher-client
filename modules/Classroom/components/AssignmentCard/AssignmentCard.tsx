@@ -8,7 +8,7 @@ import { HiDotsHorizontal } from "react-icons/hi";
 
 import { useAppSelector } from "@/shared/redux/hooks";
 import { selectAuthenticatedUser } from "@/shared/redux/reducers/user.reducer";
-import { useGetSubmissionStatusQuery } from "@/shared/redux/rtk-apis/assignments/assignments.api";
+import { useGetSubmissionStatusQuery } from "@/shared/redux/rtk-apis/submissions/submissions.api";
 
 import ConfirmDeleteAssignmentModal from "../ConfirmDeleteAssignmentModal/ConfirmDeleteAssignmentModal";
 import CreateAssignmentFormModal from "../CreateAssignmentFormModal/CreateAssignmentFormModal";
@@ -19,13 +19,14 @@ import { useStyles } from "./AssignmentCard.styles";
 
 const AssignmentCard: React.FC<IAssignmentCardProps> = ({ assignment, classroomId }) => {
   const user = useAppSelector(selectAuthenticatedUser);
-  const [editModalOpened, setEditModalOpened] = useState(false);
-  const [deleteModalOpened, setDeleteModalOpened] = useState(false);
-  const [submitModalOpened, setSubmitModalOpened] = useState(false);
-  const [submissionsModalOpened, setSubmissionsModalOpened] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
+  const [isSubmissionModalOpen, setIsSubmissionModalOpen] = useState(false);
+
   const { classes } = useStyles();
   const { data: submissionStatus } = useGetSubmissionStatusQuery(
-    { assignmentId: assignment.id, userId: user?.userId ?? 0 },
+    { assignmentId: assignment.id, userId: user?.userId ?? 0, classroomId: classroomId },
     { skip: !user || user.userType !== "student" },
   );
 
@@ -52,8 +53,8 @@ const AssignmentCard: React.FC<IAssignmentCardProps> = ({ assignment, classroomI
             </Menu.Target>
 
             <Menu.Dropdown>
-              <Menu.Item onClick={() => setEditModalOpened(true)}>Edit</Menu.Item>
-              <Menu.Item color="red" onClick={() => setDeleteModalOpened(true)}>
+              <Menu.Item onClick={() => setIsEditModalOpen(true)}>Edit</Menu.Item>
+              <Menu.Item color="red" onClick={() => setIsDeleteModalOpen(true)}>
                 Delete
               </Menu.Item>
             </Menu.Dropdown>
@@ -92,7 +93,7 @@ const AssignmentCard: React.FC<IAssignmentCardProps> = ({ assignment, classroomI
           {user?.userType === "teacher" ? (
             <Button
               className={classes.submissionButton}
-              onClick={() => setSubmissionsModalOpened(true)}
+              onClick={() => setIsSubmissionModalOpen(true)}
             >
               Submissions
             </Button>
@@ -101,7 +102,7 @@ const AssignmentCard: React.FC<IAssignmentCardProps> = ({ assignment, classroomI
               Submitted
             </Button>
           ) : (
-            <Button className={classes.submitButton} onClick={() => setSubmitModalOpened(true)}>
+            <Button className={classes.submitButton} onClick={() => setIsSubmitModalOpen(true)}>
               Submit
             </Button>
           )}
@@ -109,8 +110,8 @@ const AssignmentCard: React.FC<IAssignmentCardProps> = ({ assignment, classroomI
       </Card>
 
       <CreateAssignmentFormModal
-        opened={editModalOpened}
-        onClose={() => setEditModalOpened(false)}
+        opened={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
         classroomId={classroomId}
         assignment={assignment}
       />
@@ -118,21 +119,21 @@ const AssignmentCard: React.FC<IAssignmentCardProps> = ({ assignment, classroomI
       <ConfirmDeleteAssignmentModal
         classroomId={classroomId}
         assignmentId={assignment.id}
-        isOpen={deleteModalOpened}
-        onClose={() => setDeleteModalOpened(false)}
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
       />
       {user?.userId && (
         <SubmitAssignmentModal
-          opened={submitModalOpened}
-          onClose={() => setSubmitModalOpened(false)}
+          opened={isSubmitModalOpen}
+          onClose={() => setIsSubmitModalOpen(false)}
           assignmentId={assignment.id}
           classroomId={classroomId}
           userId={user.userId}
         />
       )}
       <SubmissionsModal
-        opened={submissionsModalOpened}
-        onClose={() => setSubmissionsModalOpened(false)}
+        opened={isSubmissionModalOpen}
+        onClose={() => setIsSubmissionModalOpen(false)}
         assignmentId={assignment.id}
         classroomId={classroomId}
         dueDate={assignment.dueDate}

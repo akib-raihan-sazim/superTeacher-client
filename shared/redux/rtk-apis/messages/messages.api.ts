@@ -1,13 +1,14 @@
 import { projectApi } from "../api.config";
-import { CreateMessageDto, IMessage } from "./messages.interface";
+import { IMessage } from "./messages.interface";
 
 const messagesApi = projectApi.injectEndpoints({
   endpoints: (builder) => ({
-    createMessage: builder.mutation<IMessage, CreateMessageDto>({
-      query: (messageData) => ({
+    createMessage: builder.mutation<IMessage, FormData>({
+      query: (formData) => ({
         url: "/messages",
         method: "POST",
-        body: messageData,
+        body: formData,
+        formData: true,
       }),
       invalidatesTags: ["Messages"],
     }),

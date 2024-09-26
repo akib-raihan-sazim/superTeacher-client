@@ -4,7 +4,7 @@ import { showNotification } from "@mantine/notifications";
 import { useForm, Controller } from "react-hook-form";
 
 import { ApiError } from "@/modules/Login/containers/LoginContainer.types";
-import { useSubmitAssignmentMutation } from "@/shared/redux/rtk-apis/assignments/assignments.api";
+import { useSubmitAssignmentMutation } from "@/shared/redux/rtk-apis/submissions/submissions.api";
 
 import {
   assignmentSubmissionSchema,

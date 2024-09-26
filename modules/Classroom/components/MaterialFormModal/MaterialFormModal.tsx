@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 
+import Image from "next/image";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Modal,
@@ -19,6 +21,7 @@ import { ApiError } from "@/modules/Login/containers/LoginContainer.types";
 import {
   useUploadResourceMutation,
   useUpdateResourceMutation,
+  useGetResourceDownloadUrlQuery,
 } from "@/shared/redux/rtk-apis/classworks/classworks.api";
 
 import {
@@ -48,8 +51,27 @@ const MaterialFormModal: React.FC<IMaterialFormModalProps> = ({
   });
 
   const [isLoading, setIsLoading] = useState(false);
+  const [filePreview, setFilePreview] = useState<string | null>(null);
   const [uploadResource] = useUploadResourceMutation();
   const [updateResource] = useUpdateResourceMutation();
+
+  const { data: downloadUrl } = useGetResourceDownloadUrlQuery(
+    {
+      classroomId,
+      resourceId: resource?.id || 0,
+    },
+    {
+      skip: !resource,
+    },
+  );
+
+  const handleDownload = () => {
+    if (downloadUrl) {
+      window.open(downloadUrl, "_blank");
+    } else {
+      console.error("Download URL is undefined");
+    }
+  };
 
   useEffect(() => {
     if (resource) {
@@ -111,6 +133,15 @@ const MaterialFormModal: React.FC<IMaterialFormModalProps> = ({
     onClose();
   };
 
+  const handleFileChange = (file: File | null) => {
+    if (file) {
+      const fileUrl = URL.createObjectURL(file);
+      setFilePreview(fileUrl);
+    } else {
+      setFilePreview(null);
+    }
+  };
+
   return (
     <Modal opened={opened} onClose={handleCancel} size="md" centered>
       <Box mx="xl">
@@ -144,18 +175,69 @@ const MaterialFormModal: React.FC<IMaterialFormModalProps> = ({
                     size="md"
                     label="Upload file"
                     placeholder="Select a file"
-                    value={value?.name || ""}
+                    value={value?.name || resource?.fileUrl || ""}
                     onClick={() => document.getElementById("hidden-file-input")?.click()}
-                    readOnly
                     styles={inputStyles}
                     error={errors.file?.message}
+                    readOnly
                   />
                   <FileInput
                     id="hidden-file-input"
                     style={{ display: "none" }}
-                    onChange={(file) => onChange(file)}
+                    onChange={(file) => {
+                      handleFileChange(file);
+                      onChange(file);
+                    }}
                     {...rest}
                   />
+                  {filePreview && (
+                    <Box mt="md">
+                      <Text size="md" mb="xs" c="#4CAF50" fw={500}>
+                        File Preview:
+                      </Text>
+                      {value?.type.startsWith("image/") ? (
+                        <Image
+                          src={filePreview}
+                          alt="File Preview"
+                          width={360}
+                          height={200}
+                          style={{ width: "100%", height: "200px" }}
+                        />
+                      ) : (
+                        <Image
+                          src="/icons8-file.svg"
+                          alt="PDF Icon"
+                          width={360}
+                          height={200}
+                          style={{ width: "100%", height: "200px" }}
+                        />
+                      )}
+                    </Box>
+                  )}
+                  {!value && resource?.fileUrl && (
+                    <Box mt="md" onClick={handleDownload} style={{ cursor: "pointer" }}>
+                      <Text size="md" mb="xs" c="#4CAF50" fw={500}>
+                        Current File:
+                      </Text>
+                      {resource?.fileUrl.match(/\.(jpeg|jpg|png|gif)$/) ? (
+                        <Image
+                          src={resource.fileUrl}
+                          alt="Current File"
+                          width={360}
+                          height={200}
+                          style={{ width: "100%", height: "200px" }}
+                        />
+                      ) : (
+                        <Image
+                          src="/icons8-file.svg"
+                          alt="PDF Icon"
+                          width={360}
+                          height={200}
+                          style={{ width: "100%", height: "200px" }}
+                        />
+                      )}
+                    </Box>
+                  )}
                 </Box>
               )}
             />
@@ -178,5 +260,4 @@ const MaterialFormModal: React.FC<IMaterialFormModalProps> = ({
     </Modal>
   );
 };
-
 export default MaterialFormModal;

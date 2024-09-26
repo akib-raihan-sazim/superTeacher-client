@@ -3,7 +3,7 @@ import { IUser } from "../enrollments/enrollments.types";
 export interface IMessage {
   id: number;
   content: string;
-  attachmentURL?: string;
+  attachmentUrl?: string;
   sender: IUser;
   classroomId: number;
   createdAt: string;
@@ -12,6 +12,6 @@ export interface IMessage {
 
 export interface CreateMessageDto {
   content: string;
-  attachmentURL?: string;
   classroomId: number;
+  file?: File;
 }

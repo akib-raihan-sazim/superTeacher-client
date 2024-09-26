@@ -12,7 +12,9 @@ import {
 import { showNotification } from "@mantine/notifications";
 import { FaDownload } from "react-icons/fa";
 
-import { useGetAssignmentSubmissionsQuery } from "@/shared/redux/rtk-apis/assignments/assignments.api";
+import { useAppSelector } from "@/shared/redux/hooks";
+import { selectAuthenticatedUser } from "@/shared/redux/reducers/user.reducer";
+import { useGetAssignmentSubmissionsQuery } from "@/shared/redux/rtk-apis/submissions/submissions.api";
 
 import { ISubmissionsModalProps } from "./SubmissionsModal.interface";
 
@@ -23,13 +25,14 @@ const SubmissionsModal: React.FC<ISubmissionsModalProps> = ({
   classroomId,
   dueDate,
 }) => {
+  const user = useAppSelector(selectAuthenticatedUser);
   const {
     data: submissions,
     isLoading,
     isError,
   } = useGetAssignmentSubmissionsQuery(
     { classroomId, assignmentId },
-    { skip: !classroomId || !assignmentId },
+    { skip: !classroomId || !assignmentId || !user.userId },
   );
 
   if (isLoading) {

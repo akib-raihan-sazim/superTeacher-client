@@ -4,6 +4,8 @@ import { Button, Collapse, Flex, SimpleGrid, Title, Loader, Center } from "@mant
 import { showNotification } from "@mantine/notifications";
 import { FaChevronRight, FaChevronDown } from "react-icons/fa6";
 
+import { useAppSelector } from "@/shared/redux/hooks";
+import { selectAuthenticatedUser } from "@/shared/redux/reducers/user.reducer";
 import { useGetClassroomAssignmentsQuery } from "@/shared/redux/rtk-apis/assignments/assignments.api";
 
 import AssignmentCard from "../AssignmentCard/AssignmentCard";
@@ -13,12 +15,13 @@ import { useStyles } from "./AssignmentList.styles";
 const AssignmentList: React.FC<IAssignmentsProps> = ({ classroomId }) => {
   const { classes } = useStyles();
   const [toggleAssignmentsCollapse, setToggleAssignmentsCollapse] = useState(true);
+  const user = useAppSelector(selectAuthenticatedUser);
 
   const {
     data: assignments,
     isLoading,
     error,
-  } = useGetClassroomAssignmentsQuery(classroomId, { skip: !classroomId });
+  } = useGetClassroomAssignmentsQuery(classroomId, { skip: !classroomId || !user.userId });
 
   if (error) {
     showNotification({

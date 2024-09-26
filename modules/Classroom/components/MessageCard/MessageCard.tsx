@@ -35,6 +35,11 @@ const MessageCard: React.FC<IMessageCardProps> = ({ message }) => {
         <Text className={classes.time}>{timeAgo}</Text>
       </Flex>
       <Text>{content}</Text>
+      {message.attachmentUrl && (
+        <Text component="a" href={message.attachmentUrl} target="_blank">
+          Attachment
+        </Text>
+      )}
     </Card>
   );
 };

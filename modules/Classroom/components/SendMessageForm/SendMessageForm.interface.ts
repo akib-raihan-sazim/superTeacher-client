@@ -4,4 +4,5 @@ export interface ISendMessageFormProps {
 
 export interface ISendMessageFormValues {
   content: string;
+  file?: File;
 }
