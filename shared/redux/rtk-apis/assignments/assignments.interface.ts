@@ -13,3 +13,23 @@ export interface AssignmentsResponseDto {
   classroomId?: number;
   dueDate: Date;
 }
+
+export interface StudentResponseDto {
+  firstName: string;
+  lastName: string;
+  fileUrl: string;
+  createdAt: Date;
+}
+
+export interface IApiSubmissionResponse {
+  id: number;
+  createdAt: Date;
+  fileUrl: string;
+  student: {
+    id: number;
+    user: {
+      firstName: string;
+      lastName: string;
+    };
+  };
+}
