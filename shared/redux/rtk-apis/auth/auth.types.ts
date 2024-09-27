@@ -85,3 +85,6 @@ export interface ILoginFormValues {
   email: string;
   password: string;
 }
+
+export type TGenerateOtpResponse = string;
+export type TResetPasswordResponse = boolean;
