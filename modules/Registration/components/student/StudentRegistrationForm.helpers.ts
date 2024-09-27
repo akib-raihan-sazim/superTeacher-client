@@ -24,9 +24,9 @@ export const studentRegistrationSchema = z
     confirmPassword: z.string(),
     medium: z.string().optional(),
     class: z.string().optional(),
-    degreeType: degreeTypeEnum.optional(),
+    degree: degreeTypeEnum.optional(),
     degreeName: z.string().optional(),
-    semesterYear: z.string().optional(),
+    semester: z.string().optional(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match",
@@ -51,10 +51,10 @@ export const studentRegistrationSchema = z
     }
 
     if (data.educationLevel === "university") {
-      if (!data.degreeType) {
+      if (!data.degree) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          path: ["degreeType"],
+          path: ["degree"],
           message: "Degree type is required for University",
         });
       }
@@ -65,10 +65,10 @@ export const studentRegistrationSchema = z
           message: "Degree name is required for University",
         });
       }
-      if (!data.semesterYear) {
+      if (!data.semester) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          path: ["semesterYear"],
+          path: ["semester"],
           message: "Semester/Year is required for University",
         });
       }
@@ -89,7 +89,7 @@ export const defaultValues: TStudentRegistrationFormData = {
   confirmPassword: "",
   medium: undefined,
   class: undefined,
-  degreeType: undefined,
+  degree: undefined,
   degreeName: undefined,
-  semesterYear: undefined,
+  semester: undefined,
 };

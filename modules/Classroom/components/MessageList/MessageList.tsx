@@ -62,7 +62,7 @@ const MessageList: React.FC<IMessageListProps> = ({ classroomId }) => {
     <Box style={{ position: "relative" }}>
       <LoadingOverlay visible={isLoading} overlayBlur={2} />
       {sortedMessages.map((message) => (
-        <MessageCard key={message.id} message={message} />
+        <MessageCard key={message.id} message={message} classroomId={classroomId} />
       ))}
     </Box>
   );

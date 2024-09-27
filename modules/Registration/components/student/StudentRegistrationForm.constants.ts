@@ -22,7 +22,7 @@ export const EDUCATION_LEVEL_OPTIONS = [
 ];
 
 export const GENDER_OPTIONS = [
-  { value: "male", label: "Male" },
-  { value: "female", label: "Female" },
-  { value: "other", label: "Other" },
+  { value: "Male", label: "Male" },
+  { value: "Female", label: "Female" },
+  { value: "Other", label: "Other" },
 ];

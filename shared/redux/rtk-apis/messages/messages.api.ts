@@ -20,8 +20,20 @@ const messagesApi = projectApi.injectEndpoints({
       }),
       providesTags: ["Messages"],
     }),
+
+    getMessageDownloadUrl: builder.query<string, { classroomId: number; messageId: number }>({
+      query: ({ classroomId, messageId }) => ({
+        url: `/messages/${classroomId}/messages/${messageId}/download`,
+        responseHandler: (response) => response.text(),
+      }),
+      transformResponse: (responseData: string) => responseData,
+    }),
   }),
   overrideExisting: false,
 });
 
-export const { useCreateMessageMutation, useGetClassroomMessagesQuery } = messagesApi;
+export const {
+  useCreateMessageMutation,
+  useGetClassroomMessagesQuery,
+  useGetMessageDownloadUrlQuery,
+} = messagesApi;

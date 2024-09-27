@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 
+import Image from "next/image";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Modal,
@@ -18,6 +20,7 @@ import { Controller, useForm } from "react-hook-form";
 
 import {
   useCreateAssignmentMutation,
+  useGetAssignmentDownloadUrlQuery,
   useUpdateAssignmentMutation,
 } from "@/shared/redux/rtk-apis/assignments/assignments.api";
 
@@ -43,25 +46,36 @@ const CreateAssignmentFormModal: React.FC<IAssignmentFormModalProps> = ({
     register,
     formState: { errors },
     reset,
-    setValue,
+    watch,
   } = useForm<TAssignmentFormValues>({
     resolver: zodResolver(isUpdateAssignment ? assignmentFormSchemaEdit : assignmentFormSchema),
     mode: "onBlur",
   });
 
   const [isLoading, setIsLoading] = useState(false);
+  const [filePreview, setFilePreview] = useState<string | null>(null);
   const [createAssignment] = useCreateAssignmentMutation();
   const [updateAssignment] = useUpdateAssignmentMutation();
 
+  const watchFile = watch("file");
+
   useEffect(() => {
     if (opened && assignment) {
-      setValue("title", assignment.title);
-      setValue("description", assignment.description);
-      setValue("dueDate", new Date(assignment.dueDate));
-    } else if (!isUpdateAssignment) {
-      reset();
+      reset({
+        title: assignment.title,
+        description: assignment.description,
+        dueDate: new Date(assignment.dueDate),
+      });
+      setFilePreview(null);
+    } else if (opened) {
+      reset({
+        title: "",
+        description: "",
+        dueDate: undefined,
+      });
+      setFilePreview(null);
     }
-  }, [opened, assignment, setValue, reset, isUpdateAssignment]);
+  }, [opened, assignment, reset]);
 
   const onSubmit = async (data: TAssignmentFormValues) => {
     setIsLoading(true);
@@ -101,7 +115,6 @@ const CreateAssignmentFormModal: React.FC<IAssignmentFormModalProps> = ({
         });
       }
 
-      reset();
       onClose();
     } catch (error) {
       showNotification({
@@ -115,8 +128,34 @@ const CreateAssignmentFormModal: React.FC<IAssignmentFormModalProps> = ({
   };
 
   const handleCancel = () => {
-    reset();
     onClose();
+  };
+
+  const handleFileChange = (file: File | null) => {
+    if (file) {
+      const fileURL = URL.createObjectURL(file);
+      setFilePreview(fileURL);
+    } else {
+      setFilePreview(null);
+    }
+  };
+
+  const { data: downloadUrl } = useGetAssignmentDownloadUrlQuery(
+    {
+      classroomId,
+      assignmentId: assignment?.id || 0,
+    },
+    {
+      skip: !assignment,
+    },
+  );
+
+  const handleDownload = () => {
+    if (downloadUrl) {
+      window.open(downloadUrl, "_blank");
+    } else {
+      console.error("Download URL is undefined");
+    }
   };
 
   return (
@@ -152,18 +191,69 @@ const CreateAssignmentFormModal: React.FC<IAssignmentFormModalProps> = ({
                     size="md"
                     label="Upload file"
                     placeholder="Select a file"
-                    value={value?.name || ""}
+                    value={value?.name || assignment?.fileUrl || ""}
                     onClick={() => document.getElementById("hidden-file-input")?.click()}
-                    readOnly
                     styles={inputStyles}
                     error={errors.file?.message}
+                    readOnly
                   />
                   <FileInput
                     id="hidden-file-input"
                     style={{ display: "none" }}
-                    onChange={(file) => onChange(file)}
+                    onChange={(file) => {
+                      handleFileChange(file);
+                      onChange(file);
+                    }}
                     {...rest}
                   />
+                  {filePreview && (
+                    <Box mt="md">
+                      <Text size="md" mb="xs" c="#4CAF50" fw={500}>
+                        File Preview:
+                      </Text>
+                      {watchFile?.type.startsWith("image/") ? (
+                        <Image
+                          src={filePreview}
+                          alt="File Preview"
+                          width={360}
+                          height={200}
+                          style={{ width: "100%", height: "200px" }}
+                        />
+                      ) : (
+                        <Image
+                          src="/icons8-file.svg"
+                          alt="File Icon"
+                          width={360}
+                          height={200}
+                          style={{ width: "100%", height: "200px" }}
+                        />
+                      )}
+                    </Box>
+                  )}
+                  {!filePreview && assignment?.fileUrl && (
+                    <Box mt="md" onClick={handleDownload} style={{ cursor: "pointer" }}>
+                      <Text size="md" mb="xs" c="#4CAF50" fw={500}>
+                        Current File:
+                      </Text>
+                      {assignment.fileUrl.match(/\.(jpeg|jpg|png|gif)$/) ? (
+                        <Image
+                          src={assignment.fileUrl}
+                          alt="Current File"
+                          width={360}
+                          height={200}
+                          style={{ width: "100%", height: "200px" }}
+                        />
+                      ) : (
+                        <Image
+                          src="/icons8-file.svg"
+                          alt="File Icon"
+                          width={360}
+                          height={200}
+                          style={{ width: "100%", height: "200px" }}
+                        />
+                      )}
+                    </Box>
+                  )}
                 </Box>
               )}
             />

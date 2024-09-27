@@ -10,7 +10,7 @@ export type TStudentRegistrationFormData = {
   confirmPassword: string;
   medium?: string;
   class?: string;
-  degreeType?: "Bachelors" | "Masters";
+  degree?: "Bachelors" | "Masters";
   degreeName?: string;
-  semesterYear?: string;
+  semester?: string;
 };

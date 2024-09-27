@@ -21,6 +21,9 @@ const useStyles = createStyles((theme, { userType }: { userType: string }) => ({
   time: {
     color: theme.colors.gray[6],
   },
+  downloadButton: {
+    backgroundColor: "#151d35",
+  },
 }));
 
 export default useStyles;

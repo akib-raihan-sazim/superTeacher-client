@@ -59,6 +59,7 @@ const classworksApi = projectApi.injectEndpoints({
         url: `/classrooms/${classroomId}/resources/${resourceId}/download`,
         responseHandler: (response) => response.text(),
       }),
+      providesTags: ["ClassworkResources"],
       transformResponse: (responseData: string) => responseData,
     }),
   }),

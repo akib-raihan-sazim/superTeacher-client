@@ -58,6 +58,15 @@ const assignmentsApi = projectApi.injectEndpoints({
       }),
       invalidatesTags: (_, __, { classroomId }) => [{ type: "Assignments", id: classroomId }],
     }),
+
+    getAssignmentDownloadUrl: builder.query<string, { classroomId: number; assignmentId: number }>({
+      query: ({ classroomId, assignmentId }) => ({
+        url: `/classrooms/${classroomId}/assignments/${assignmentId}/download`,
+        responseHandler: (response) => response.text(),
+      }),
+      providesTags: (_, __, { classroomId }) => [{ type: "Assignments", id: classroomId }],
+      transformResponse: (responseData: string) => responseData,
+    }),
   }),
   overrideExisting: false,
 });
@@ -67,4 +76,5 @@ export const {
   useGetClassroomAssignmentsQuery,
   useUpdateAssignmentMutation,
   useDeleteAssignmentMutation,
+  useGetAssignmentDownloadUrlQuery,
 } = assignmentsApi;

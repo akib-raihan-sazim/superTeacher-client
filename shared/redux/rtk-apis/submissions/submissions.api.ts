@@ -40,7 +40,7 @@ const submissionApi = projectApi.injectEndpoints({
     }),
 
     getSubmissionStatus: builder.query<
-      { submitted: boolean },
+      { submitted: boolean; submissionId?: number },
       { assignmentId: number; userId: number; classroomId: number }
     >({
       query: ({ assignmentId, userId, classroomId }) => ({
@@ -48,6 +48,17 @@ const submissionApi = projectApi.injectEndpoints({
         method: "GET",
       }),
       providesTags: (_, __, { classroomId }) => [{ type: "Assignments", id: classroomId }],
+    }),
+
+    deleteSubmission: builder.mutation<
+      { message: string },
+      { classroomId: number; submissionId: number }
+    >({
+      query: ({ classroomId, submissionId }) => ({
+        url: `/classrooms/${classroomId}/submissions/${submissionId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: (_, __, { classroomId }) => [{ type: "Assignments", id: classroomId }],
     }),
   }),
   overrideExisting: false,
@@ -57,4 +68,5 @@ export const {
   useSubmitAssignmentMutation,
   useGetAssignmentSubmissionsQuery,
   useGetSubmissionStatusQuery,
+  useDeleteSubmissionMutation,
 } = submissionApi;

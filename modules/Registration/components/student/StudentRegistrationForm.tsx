@@ -8,7 +8,6 @@ import {
   CLASS_OPTIONS,
   DEGREE_OPTIONS,
   EDUCATION_LEVEL_OPTIONS,
-  GENDER_OPTIONS,
 } from "./StudentRegistrationForm.constants";
 import {
   defaultValues,
@@ -76,7 +75,7 @@ export function StudentRegistrationForm({ onSubmit }: IStudentRegistrationFormPr
                       withAsterisk
                       placeholder="Select your gender"
                       classNames={{ input: styles["input"], label: styles["label"] }}
-                      data={GENDER_OPTIONS}
+                      data={["Male", "Female"]}
                       error={errors.gender?.message}
                       {...field}
                     />
@@ -166,7 +165,7 @@ export function StudentRegistrationForm({ onSubmit }: IStudentRegistrationFormPr
               )}
               {educationLevel === EEducationLevel.UNIVERSITY && (
                 <Controller
-                  name="degreeType"
+                  name="degree"
                   control={control}
                   render={({ field }) => (
                     <Select
@@ -178,7 +177,7 @@ export function StudentRegistrationForm({ onSubmit }: IStudentRegistrationFormPr
                         { value: "Bachelors", label: "Bachelors" },
                         { value: "Masters", label: "Masters" },
                       ]}
-                      error={errors.degreeType?.message}
+                      error={errors.degree?.message}
                       {...field}
                     />
                   )}
@@ -227,8 +226,8 @@ export function StudentRegistrationForm({ onSubmit }: IStudentRegistrationFormPr
                   withAsterisk
                   placeholder="Enter semester or year"
                   classNames={{ input: styles["input"], label: styles["label"] }}
-                  {...register("semesterYear")}
-                  error={errors.semesterYear?.message}
+                  {...register("semester")}
+                  error={errors.semester?.message}
                 />
               </>
             )}
