@@ -13,6 +13,7 @@ import { useGetUserDetailsQuery } from "@/shared/redux/rtk-apis/users/users.api"
 import StudentProfile from "../../components/StudentProfile/StudentProfile";
 import StudentUpdateProfileForm from "../../components/StudentUpdateProfileForm/StudentUpdateProfileForm";
 import TeacherProfile from "../../components/TeacherProfile/TeacherProfile";
+import TeacherUpdateProfileForm from "../../components/TeacherUpdateProfileForm/TeacherUpdateProfileForm";
 import { useStyles } from "./ProfileContainer.styles";
 
 const ProfileContainer = () => {
@@ -75,7 +76,7 @@ const ProfileContainer = () => {
         </Flex>
         {user.userType === "teacher" &&
           (isEditing ? (
-            <>{/* TODO: Teacher's edit form modal */}</>
+            <TeacherUpdateProfileForm user={user} onClose={handleCloseEdit} />
           ) : (
             <TeacherProfile user={user} />
           ))}
