@@ -10,6 +10,7 @@ import { useAppSelector } from "@/shared/redux/hooks";
 import { selectAuthenticatedUser } from "@/shared/redux/reducers/user.reducer";
 import { useGetUserDetailsQuery } from "@/shared/redux/rtk-apis/users/users.api";
 
+import ResetPasswordFormModal from "../../components/ResetPasswordFormModal/ResetPasswordFormModal";
 import StudentProfile from "../../components/StudentProfile/StudentProfile";
 import StudentUpdateProfileForm from "../../components/StudentUpdateProfileForm/StudentUpdateProfileForm";
 import TeacherProfile from "../../components/TeacherProfile/TeacherProfile";
@@ -19,6 +20,7 @@ import { useStyles } from "./ProfileContainer.styles";
 const ProfileContainer = () => {
   const { classes } = useStyles();
   const [isEditing, setIsEditing] = useState(false);
+  const [isResetPasswordModalOpen, setIsResetPasswordModalOpen] = useState(false);
 
   const currentUser = useAppSelector(selectAuthenticatedUser);
 
@@ -59,7 +61,12 @@ const ProfileContainer = () => {
       <SimpleGrid className={classes.container}>
         <Title className={classes.title}>Profile</Title>
         <Flex justify="flex-end" gap="md" align="center">
-          <Button size="compact-md" variant="outline" className={classes.button}>
+          <Button
+            size="compact-md"
+            variant="outline"
+            className={classes.button}
+            onClick={() => setIsResetPasswordModalOpen(true)}
+          >
             Reset Password
           </Button>
           <ActionIcon
@@ -87,6 +94,11 @@ const ProfileContainer = () => {
             <StudentProfile user={user} />
           ))}
       </SimpleGrid>
+
+      <ResetPasswordFormModal
+        opened={isResetPasswordModalOpen}
+        onClose={() => setIsResetPasswordModalOpen(false)}
+      />
     </div>
   );
 };
