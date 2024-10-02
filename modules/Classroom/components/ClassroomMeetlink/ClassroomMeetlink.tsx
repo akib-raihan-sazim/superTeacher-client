@@ -1,12 +1,13 @@
 import { useState } from "react";
 
-import { Anchor, Box, Button, Flex, Title } from "@mantine/core";
+import { ActionIcon, Anchor, Box, Button, Flex, Title } from "@mantine/core";
 import { FaPlus, FaTrashAlt } from "react-icons/fa";
 import { TbEditCircle } from "react-icons/tb";
 
 import { useAppSelector } from "@/shared/redux/hooks";
 import { selectAuthenticatedUser } from "@/shared/redux/reducers/user.reducer";
 
+import ConfirmDeleteMeetLinkModal from "../ConfirmDeleteMeetLinkModal/ConfirmDeleteMeetLinkModal";
 import UploadMeetlinkModal from "../UploadMeetLinkModal/UploadMeetLinkModal";
 import { TClassroomMeetlinkProps } from "./ClassroomMeetlink.interface";
 import { useMeetlinkStyles } from "./ClassroomMeetlink.styles";
@@ -15,6 +16,7 @@ const ClassroomMeetlink = ({ meetlink, classroomId }: TClassroomMeetlinkProps) =
   const user = useAppSelector(selectAuthenticatedUser);
   const { classes } = useMeetlinkStyles();
   const [meetLinkModalOpened, setMeetLinkModalOpened] = useState(false);
+  const [confirmDeleteModalOpened, setConfirmDeleteModalOpened] = useState(false);
 
   if (meetlink) {
     return (
@@ -27,10 +29,17 @@ const ClassroomMeetlink = ({ meetlink, classroomId }: TClassroomMeetlinkProps) =
           {user.userType === "teacher" ? (
             <>
               <TbEditCircle />
-              <FaTrashAlt className={classes.icon} />
+              <ActionIcon onClick={() => setConfirmDeleteModalOpened(true)}>
+                <FaTrashAlt className={classes.icon} color="black" />
+              </ActionIcon>
             </>
           ) : null}
         </Flex>
+        <ConfirmDeleteMeetLinkModal
+          classroomId={classroomId}
+          isOpen={confirmDeleteModalOpened}
+          onClose={() => setConfirmDeleteModalOpened(false)}
+        />
       </Box>
     );
   }
