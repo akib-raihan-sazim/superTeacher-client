@@ -6,6 +6,7 @@ import { TextInput, PasswordInput } from "react-hook-form-mantine";
 
 import RegisterModal from "@/modules/Landing/components/RegisterModal/RegisterModal";
 
+import ForgetPasswordModal from "./ForgetPasswordModal/ForgetPasswordModal";
 import { LoginFormSchemaResolver, loginFormDefaultValues } from "./LoginForm.helpers";
 import { ILoginFormProps, ILoginFormValues } from "./LoginForm.types";
 
@@ -19,6 +20,7 @@ const LoginForm: React.FC<ILoginFormProps> = ({ onSubmit }) => {
     resolver: LoginFormSchemaResolver,
   });
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
+  const [isPasswordResetModalOpen, setIsPasswordResetModalOpen] = useState(false);
 
   const openRegisterModal = () => {
     setIsRegisterModalOpen(true);
@@ -26,6 +28,14 @@ const LoginForm: React.FC<ILoginFormProps> = ({ onSubmit }) => {
 
   const closeRegisterModal = () => {
     setIsRegisterModalOpen(false);
+  };
+
+  const openPasswordResetModal = () => {
+    setIsPasswordResetModalOpen(true);
+  };
+
+  const closePasswordResetModal = () => {
+    setIsPasswordResetModalOpen(false);
   };
 
   return (
@@ -75,7 +85,9 @@ const LoginForm: React.FC<ILoginFormProps> = ({ onSubmit }) => {
         </form>
 
         <Text fw={400} ta="center" my="xs" size="md">
-          <Anchor c="#4CAF50">Forgot Password?</Anchor>
+          <Anchor c="#4CAF50" onClick={openPasswordResetModal}>
+            Forgot Password?
+          </Anchor>
         </Text>
 
         <Text fw={400} c="#4CAF50" ta="center" size="md" mt="xl">
@@ -85,6 +97,7 @@ const LoginForm: React.FC<ILoginFormProps> = ({ onSubmit }) => {
           </Anchor>
         </Text>
         <RegisterModal opened={isRegisterModalOpen} close={closeRegisterModal} />
+        <ForgetPasswordModal opened={isPasswordResetModalOpen} onClose={closePasswordResetModal} />
       </Box>
     </Flex>
   );
