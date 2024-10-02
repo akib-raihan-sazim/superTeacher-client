@@ -27,6 +27,7 @@ export interface Classroom {
   updatedAt: string;
   days: string[];
   teacher: Teacher;
+  meetLink?: string;
 }
 
 export interface ClassroomListProps {

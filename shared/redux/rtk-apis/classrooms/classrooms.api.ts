@@ -48,6 +48,15 @@ const classroomsApi = enhancedProjectApi.injectEndpoints({
       }),
       invalidatesTags: [{ type: "Classrooms", id: "LIST" }],
     }),
+
+    uploadMeetLink: builder.mutation<void, { classroomId: number; meetlink: string }>({
+      query: ({ classroomId, meetlink }) => ({
+        url: `/classrooms/${classroomId}/meet-link`,
+        method: "PUT",
+        body: { meetLink: meetlink },
+      }),
+      invalidatesTags: [{ type: "Classrooms", id: "LIST" }],
+    }),
   }),
   overrideExisting: false,
 });
@@ -58,4 +67,5 @@ export const {
   useGetClassroomByIdQuery,
   useDeleteClassroomMutation,
   useUpdateClassroomMutation,
+  useUploadMeetLinkMutation,
 } = classroomsApi;
