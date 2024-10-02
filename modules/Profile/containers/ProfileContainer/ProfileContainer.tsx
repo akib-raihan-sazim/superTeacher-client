@@ -6,7 +6,8 @@ import { FaRegEdit } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 
 import Navbar from "@/modules/Dasboard/components/Navbar/Navbar";
-import { ACCESS_TOKEN_LOCAL_STORAGE_KEY } from "@/shared/constants/app.constants";
+import { useAppSelector } from "@/shared/redux/hooks";
+import { selectAuthenticatedUser } from "@/shared/redux/reducers/user.reducer";
 import { useGetUserDetailsQuery } from "@/shared/redux/rtk-apis/users/users.api";
 
 import StudentProfile from "../../components/StudentProfile/StudentProfile";
@@ -15,38 +16,32 @@ import { useStyles } from "./ProfileContainer.styles";
 
 const ProfileContainer = () => {
   const { classes } = useStyles();
-  const [isClient, setIsClient] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+  const currentUser = useAppSelector(selectAuthenticatedUser);
 
-  const hasToken = isClient && !!localStorage.getItem(ACCESS_TOKEN_LOCAL_STORAGE_KEY);
-  const { data: user, isLoading, error } = useGetUserDetailsQuery(undefined, { skip: !hasToken });
+  const {
+    data: user,
+    isLoading,
+    error,
+  } = useGetUserDetailsQuery(undefined, {
+    skip: !currentUser?.userId,
+  });
 
   const handleEditClick = () => setIsEditing(true);
   const handleCloseEdit = () => setIsEditing(false);
 
   useEffect(() => {
-    if (isClient && error) {
+    if (error) {
       notifications.show({
         title: "Error",
         message: "Error loading profile data",
         color: "red",
       });
     }
-  }, [isClient, error]);
+  }, [error]);
 
-  if (!isClient || isLoading) return <Loader />;
-
-  if (!hasToken) {
-    return (
-      <Title order={3} color="white">
-        Please log in to view your profile
-      </Title>
-    );
-  }
+  if (isLoading) return <Loader />;
 
   if (!user) {
     return (
