@@ -1,6 +1,6 @@
 import projectApi from "../api.config";
 import { TTokenizedUser } from "../auth/auth.types";
-import { IUser } from "./users.types";
+import { EditableUserFields, IUser } from "./users.types";
 
 const usersApi = projectApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -12,8 +12,17 @@ const usersApi = projectApi.injectEndpoints({
       query: () => "users/user-details",
       providesTags: ["Profiles"],
     }),
+
+    editUser: builder.mutation<IUser, EditableUserFields>({
+      query: (editUserData) => ({
+        url: "users/edit",
+        method: "PUT",
+        body: editUserData,
+      }),
+      invalidatesTags: ["Profiles"],
+    }),
   }),
   overrideExisting: false,
 });
 
-export const { useMeQuery, useLazyMeQuery, useGetUserDetailsQuery } = usersApi;
+export const { useMeQuery, useLazyMeQuery, useGetUserDetailsQuery, useEditUserMutation } = usersApi;

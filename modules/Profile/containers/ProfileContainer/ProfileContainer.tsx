@@ -11,6 +11,7 @@ import { selectAuthenticatedUser } from "@/shared/redux/reducers/user.reducer";
 import { useGetUserDetailsQuery } from "@/shared/redux/rtk-apis/users/users.api";
 
 import StudentProfile from "../../components/StudentProfile/StudentProfile";
+import StudentUpdateProfileForm from "../../components/StudentUpdateProfileForm/StudentUpdateProfileForm";
 import TeacherProfile from "../../components/TeacherProfile/TeacherProfile";
 import { useStyles } from "./ProfileContainer.styles";
 
@@ -80,7 +81,7 @@ const ProfileContainer = () => {
           ))}
         {user.userType === "student" &&
           (isEditing ? (
-            <>{/* TODO: Student's edit form modal */}</>
+            <StudentUpdateProfileForm user={user} onClose={handleCloseEdit} />
           ) : (
             <StudentProfile user={user} />
           ))}
