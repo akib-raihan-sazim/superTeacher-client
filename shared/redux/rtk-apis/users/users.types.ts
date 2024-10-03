@@ -38,3 +38,8 @@ export interface EditableUserFields {
   student?: Omit<IStudent, "id">;
   teacher?: Omit<ITeacher, "id">;
 }
+
+export interface IResetPasswordRequest {
+  oldPassword: string;
+  newPassword: string;
+}

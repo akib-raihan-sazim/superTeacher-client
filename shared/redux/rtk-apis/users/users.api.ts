@@ -1,6 +1,6 @@
 import projectApi from "../api.config";
 import { TTokenizedUser } from "../auth/auth.types";
-import { EditableUserFields, IUser } from "./users.types";
+import { EditableUserFields, IUser, IResetPasswordRequest } from "./users.types";
 
 const usersApi = projectApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -21,8 +21,21 @@ const usersApi = projectApi.injectEndpoints({
       }),
       invalidatesTags: ["Profiles"],
     }),
+    resetPassword: builder.mutation<void, IResetPasswordRequest>({
+      query: (resetPasswordData) => ({
+        url: "users/reset-password",
+        method: "PUT",
+        body: resetPasswordData,
+      }),
+    }),
   }),
   overrideExisting: false,
 });
 
-export const { useMeQuery, useLazyMeQuery, useGetUserDetailsQuery, useEditUserMutation } = usersApi;
+export const {
+  useMeQuery,
+  useLazyMeQuery,
+  useGetUserDetailsQuery,
+  useEditUserMutation,
+  useResetPasswordMutation,
+} = usersApi;
