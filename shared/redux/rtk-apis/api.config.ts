@@ -13,6 +13,7 @@ export const projectApi = createApi({
     "ClassworkResources",
     "Assignments",
     "Exams",
+    "Profiles",
   ],
   endpoints: () => ({}),
 });

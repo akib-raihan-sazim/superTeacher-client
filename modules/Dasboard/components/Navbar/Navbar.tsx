@@ -64,7 +64,7 @@ const Navbar = () => {
             <Button className={classes.userButton}>{user?.firstName || "User"}</Button>
           </Menu.Target>
           <Menu.Dropdown>
-            <Menu.Item>Profile</Menu.Item>
+            <Menu.Item onClick={() => router.push("/profile")}>Profile</Menu.Item>
             <Menu.Item onClick={handleLogout}>Logout</Menu.Item>
           </Menu.Dropdown>
         </Menu>
