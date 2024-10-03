@@ -44,12 +44,12 @@ const CreateAssignmentFormModal: React.FC<IAssignmentFormModalProps> = ({
     control,
     handleSubmit,
     register,
-    formState: { errors },
+    formState: { errors, isDirty, isValid },
     reset,
     watch,
   } = useForm<TAssignmentFormValues>({
     resolver: zodResolver(isUpdateAssignment ? assignmentFormSchemaEdit : assignmentFormSchema),
-    mode: "onBlur",
+    mode: "onChange",
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -268,7 +268,15 @@ const CreateAssignmentFormModal: React.FC<IAssignmentFormModalProps> = ({
                   label="Due Date"
                   placeholder="Select due date"
                   error={error?.message}
-                  styles={formStyles}
+                  styles={{
+                    ...formStyles,
+                    day: {
+                      "&[data-selected]": {
+                        color: "#333",
+                        backgroundColor: "#f6f6f6",
+                      },
+                    },
+                  }}
                   popoverProps={{ withinPortal: true }}
                 />
               )}
@@ -281,7 +289,12 @@ const CreateAssignmentFormModal: React.FC<IAssignmentFormModalProps> = ({
             <Button
               type="submit"
               size="sm"
-              style={{ backgroundColor: "#4CAF50", color: "white" }}
+              disabled={!isValid || !isDirty}
+              style={{
+                backgroundColor: isValid && isDirty ? "#4caf50" : "#f5f5f5",
+                color: isValid && isDirty ? "white" : "#9e9e9e",
+                cursor: !isValid || !isDirty ? "not-allowed" : "pointer",
+              }}
               loading={isLoading}
             >
               {isUpdateAssignment ? "Update" : "Create"}

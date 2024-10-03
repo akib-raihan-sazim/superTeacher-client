@@ -5,7 +5,8 @@ import { EEducationLevel } from "@/shared/typedefs";
 
 import styles from "./StudentRegistraionForm.module.css";
 import {
-  CLASS_OPTIONS,
+  CLASS_OPTIONS_COLLEGE,
+  CLASS_OPTIONS_SCHOOL,
   DEGREE_OPTIONS,
   EDUCATION_LEVEL_OPTIONS,
 } from "./StudentRegistrationForm.constants";
@@ -196,7 +197,11 @@ export function StudentRegistrationForm({ onSubmit }: IStudentRegistrationFormPr
                     withAsterisk
                     placeholder="Select class"
                     classNames={{ input: styles["input"], label: styles["label"] }}
-                    data={CLASS_OPTIONS}
+                    data={
+                      educationLevel === EEducationLevel.SCHOOL
+                        ? CLASS_OPTIONS_SCHOOL
+                        : CLASS_OPTIONS_COLLEGE
+                    }
                     error={errors.class?.message}
                     {...field}
                   />

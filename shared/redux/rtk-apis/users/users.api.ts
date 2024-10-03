@@ -15,7 +15,7 @@ const usersApi = projectApi.injectEndpoints({
 
     editUser: builder.mutation<IUser, EditableUserFields>({
       query: (editUserData) => ({
-        url: "users/edit",
+        url: "users/user-details",
         method: "PUT",
         body: editUserData,
       }),

@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { Box, Button, Group, Modal, SimpleGrid, Text, useMantineTheme } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 import { useForm } from "react-hook-form";
 import { TextInput, Select, MultiSelect, TimeInput } from "react-hook-form-mantine";
 
@@ -21,6 +22,8 @@ import {
 import { useClassroomFormModalStyles } from "./ClassroomFormModal.styles";
 import { ClassroomFormModalProps } from "./ClassroomFormModal.types";
 
+dayjs.extend(utc);
+
 const ClassroomFormModal: React.FC<ClassroomFormModalProps> = ({ opened, onClose, classroom }) => {
   const theme = useMantineTheme();
   const styles = useClassroomFormModalStyles(theme);
@@ -29,7 +32,7 @@ const ClassroomFormModal: React.FC<ClassroomFormModalProps> = ({ opened, onClose
 
   const {
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid, isDirty },
     control,
     reset,
   } = useForm<ClassroomFormData>({
@@ -42,7 +45,7 @@ const ClassroomFormModal: React.FC<ClassroomFormModalProps> = ({ opened, onClose
       reset({
         title: classroom.title,
         subject: classroom.subject,
-        class_time: dayjs(classroom.classTime).format("HH:mm"),
+        class_time: dayjs.utc(classroom.classTime).format("hh:mm"),
         days: classroom.days,
       });
     } else {
@@ -138,7 +141,16 @@ const ClassroomFormModal: React.FC<ClassroomFormModalProps> = ({ opened, onClose
             <Button size="sm" style={styles.button} onClick={onClose}>
               Cancel
             </Button>
-            <Button type="submit" size="sm" style={styles.button}>
+            <Button
+              type="submit"
+              size="sm"
+              disabled={!isValid || !isDirty}
+              style={{
+                backgroundColor: isValid && isDirty ? "#4caf50" : "#f5f5f5",
+                color: isValid && isDirty ? "white" : "#9e9e9e",
+                cursor: !isValid || !isDirty ? "not-allowed" : "pointer",
+              }}
+            >
               {classroom ? "Update" : "Create"}
             </Button>
           </Group>

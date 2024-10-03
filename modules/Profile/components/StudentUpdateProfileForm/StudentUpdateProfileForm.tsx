@@ -6,7 +6,8 @@ import { Form, FormSubmitHandler, useForm } from "react-hook-form";
 import { TextInput, Select } from "react-hook-form-mantine";
 
 import {
-  CLASS_OPTIONS,
+  CLASS_OPTIONS_COLLEGE,
+  CLASS_OPTIONS_SCHOOL,
   DEGREE_OPTIONS,
   EDUCATION_LEVEL_OPTIONS,
 } from "@/modules/Registration/components/student/StudentRegistrationForm.constants";
@@ -114,7 +115,7 @@ const StudentUpdateProfileForm: React.FC<IStudentUpdateProfileFormProps> = ({ us
               label="Class"
               placeholder="Select class"
               withAsterisk
-              data={CLASS_OPTIONS}
+              data={educationLevel === "school" ? CLASS_OPTIONS_SCHOOL : CLASS_OPTIONS_COLLEGE}
               control={control}
               name="class"
               error={errors.class?.message}

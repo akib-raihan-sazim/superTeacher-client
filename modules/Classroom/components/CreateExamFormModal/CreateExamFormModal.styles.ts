@@ -3,7 +3,6 @@ export const formStyles = {
     color: "#4CAF50",
   },
   input: {
-    borderColor: "#4CAF50",
     color: "#4CAF50",
   },
 };

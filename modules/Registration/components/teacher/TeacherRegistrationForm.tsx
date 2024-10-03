@@ -20,13 +20,14 @@ const TeacherRegistrationForm: React.FC<IExtendedTeacherRegistrationFormProps> =
   uniqueCodeError,
 }) => {
   const {
-    formState: { errors },
+    formState: { errors, isValid },
     handleSubmit,
     control,
     reset,
   } = useForm<ITeacherFormValues>({
     defaultValues: TeacherRegistrationFormInitialValues,
     resolver: TeacherRegistrationSchemaResolver,
+    mode: "onChange",
   });
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
 
@@ -251,7 +252,15 @@ const TeacherRegistrationForm: React.FC<IExtendedTeacherRegistrationFormProps> =
             <Button size="sm" style={{ background: "#9e9e9e" }} onClick={() => reset()}>
               Reset
             </Button>
-            <Button type="submit" size="sm" style={{ background: "#4caf50" }}>
+            <Button
+              type="submit"
+              size="sm"
+              style={{
+                background: isValid ? "#4caf50" : "#f5f5f5",
+                color: isValid ? "white" : "#9e9e9e",
+              }}
+              disabled={!isValid}
+            >
               Submit
             </Button>
           </Group>

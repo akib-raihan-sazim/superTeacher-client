@@ -27,12 +27,12 @@ const CreateExamFormModal: React.FC<ICreateExamFormModalProps> = ({
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid, isDirty },
     control,
     reset,
   } = useForm<TExamFormValues>({
     resolver: zodResolver(examFormSchema),
-    mode: "onBlur",
+    mode: "onChange",
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -118,7 +118,15 @@ const CreateExamFormModal: React.FC<ICreateExamFormModalProps> = ({
                   label="Exam Date"
                   placeholder="Select exam date"
                   error={error?.message}
-                  styles={formStyles}
+                  styles={{
+                    ...formStyles,
+                    day: {
+                      "&[data-selected]": {
+                        color: "#333",
+                        backgroundColor: "#f6f6f6",
+                      },
+                    },
+                  }}
                   popoverProps={{ withinPortal: true }}
                 />
               )}
@@ -128,7 +136,18 @@ const CreateExamFormModal: React.FC<ICreateExamFormModalProps> = ({
             <Button size="sm" color="gray" onClick={handleCancel}>
               Cancel
             </Button>
-            <Button type="submit" size="sm" loading={isLoading} style={buttonStyles}>
+            <Button
+              type="submit"
+              size="sm"
+              loading={isLoading}
+              disabled={!isValid || !isDirty}
+              style={{
+                ...buttonStyles,
+                backgroundColor: isValid && isDirty ? "#4caf50" : "#f5f5f5",
+                color: isValid && isDirty ? "white" : "#9e9e9e",
+                cursor: !isValid || !isDirty ? "not-allowed" : "pointer",
+              }}
+            >
               {isEditMode ? "Update Exam" : "Create Exam"}
             </Button>
           </Group>
@@ -137,5 +156,4 @@ const CreateExamFormModal: React.FC<ICreateExamFormModalProps> = ({
     </Modal>
   );
 };
-
 export default CreateExamFormModal;

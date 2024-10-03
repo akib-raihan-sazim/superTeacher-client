@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 import Image from "next/image";
 
@@ -42,9 +42,8 @@ const MaterialFormModal: React.FC<IMaterialFormModalProps> = ({
     control,
     handleSubmit,
     register,
-    formState: { errors },
+    formState: { errors, isValid, isDirty },
     reset,
-    setValue,
   } = useForm<TMaterialFormValues>({
     resolver: zodResolver(resource ? editMaterialFormSchema : materialFormSchema),
     mode: "onBlur",
@@ -65,6 +64,23 @@ const MaterialFormModal: React.FC<IMaterialFormModalProps> = ({
     },
   );
 
+  useEffect(() => {
+    if (opened) {
+      if (resource) {
+        reset({
+          title: resource.title,
+          description: resource.description,
+        });
+      } else {
+        reset({
+          title: "",
+          description: "",
+        });
+      }
+      setFilePreview(null);
+    }
+  }, [opened, resource, reset]);
+
   const handleDownload = () => {
     if (downloadUrl) {
       window.open(downloadUrl, "_blank");
@@ -72,13 +88,6 @@ const MaterialFormModal: React.FC<IMaterialFormModalProps> = ({
       console.error("Download URL is undefined");
     }
   };
-
-  useEffect(() => {
-    if (resource) {
-      setValue("title", resource.title);
-      setValue("description", resource.description);
-    }
-  }, [resource, setValue]);
 
   const onSubmit = async (data: TMaterialFormValues) => {
     setIsLoading(true);
@@ -115,7 +124,6 @@ const MaterialFormModal: React.FC<IMaterialFormModalProps> = ({
         });
       }
 
-      reset();
       onClose();
     } catch (error) {
       showNotification({
@@ -249,7 +257,12 @@ const MaterialFormModal: React.FC<IMaterialFormModalProps> = ({
             <Button
               type="submit"
               size="sm"
-              style={{ backgroundColor: "#4CAF50", color: "white" }}
+              disabled={!isValid || !isDirty}
+              style={{
+                backgroundColor: isValid && isDirty ? "#4caf50" : "#f5f5f5",
+                color: isValid && isDirty ? "white" : "#9e9e9e",
+                cursor: !isValid || !isDirty ? "not-allowed" : "pointer",
+              }}
               loading={isLoading}
             >
               {resource ? "Update" : "Create"}
@@ -260,4 +273,5 @@ const MaterialFormModal: React.FC<IMaterialFormModalProps> = ({
     </Modal>
   );
 };
+
 export default MaterialFormModal;
