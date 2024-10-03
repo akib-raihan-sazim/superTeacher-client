@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { ActionIcon, Button, Flex, SimpleGrid, Title, Loader } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
@@ -6,29 +6,42 @@ import { FaRegEdit } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 
 import Navbar from "@/modules/Dasboard/components/Navbar/Navbar";
+import { useAppSelector } from "@/shared/redux/hooks";
+import { selectAuthenticatedUser } from "@/shared/redux/reducers/user.reducer";
 import { useGetUserDetailsQuery } from "@/shared/redux/rtk-apis/users/users.api";
 
+import StudentProfile from "../../components/StudentProfile/StudentProfile";
 import TeacherProfile from "../../components/TeacherProfile/TeacherProfile";
 import { useStyles } from "./ProfileContainer.styles";
 
 const ProfileContainer = () => {
   const { classes } = useStyles();
-  const { data: user, isLoading, error } = useGetUserDetailsQuery();
   const [isEditing, setIsEditing] = useState(false);
+
+  const currentUser = useAppSelector(selectAuthenticatedUser);
+
+  const {
+    data: user,
+    isLoading,
+    error,
+  } = useGetUserDetailsQuery(undefined, {
+    skip: !currentUser?.userId,
+  });
 
   const handleEditClick = () => setIsEditing(true);
   const handleCloseEdit = () => setIsEditing(false);
 
-  if (isLoading) return <Loader />;
+  useEffect(() => {
+    if (error) {
+      notifications.show({
+        title: "Error",
+        message: "Error loading profile data",
+        color: "red",
+      });
+    }
+  }, [error]);
 
-  if (error) {
-    notifications.show({
-      title: "Error",
-      message: "Error loading profile data",
-      color: "red",
-    });
-    return null;
-  }
+  if (isLoading) return <Loader />;
 
   if (!user) {
     return (
@@ -47,31 +60,30 @@ const ProfileContainer = () => {
           <Button size="compact-md" variant="outline" className={classes.button}>
             Reset Password
           </Button>
-          {!isEditing ? (
-            <ActionIcon variant="outline" className={classes.actionIcon} onClick={handleEditClick}>
-              <FaRegEdit className={classes.editIcon} />
-            </ActionIcon>
-          ) : (
-            <ActionIcon
-              color="red"
-              variant="outline"
-              className={classes.actionIcon}
-              onClick={handleCloseEdit}
-            >
+          <ActionIcon
+            variant="outline"
+            className={classes.actionIcon}
+            onClick={isEditing ? handleCloseEdit : handleEditClick}
+          >
+            {isEditing ? (
               <IoMdClose className={classes.closeIcon} />
-            </ActionIcon>
-          )}
-        </Flex>
-        {user.userType === "teacher" && (
-          <>
-            {!isEditing ? (
-              <TeacherProfile user={user} />
             ) : (
-              <>{/* TODO: Teacher's edit form modal */}</>
+              <FaRegEdit className={classes.editIcon} />
             )}
-          </>
-        )}
-        {user.userType === "student" && <>{/* TODO: student profile and update profile form */}</>}
+          </ActionIcon>
+        </Flex>
+        {user.userType === "teacher" &&
+          (isEditing ? (
+            <>{/* TODO: Teacher's edit form modal */}</>
+          ) : (
+            <TeacherProfile user={user} />
+          ))}
+        {user.userType === "student" &&
+          (isEditing ? (
+            <>{/* TODO: Student's edit form modal */}</>
+          ) : (
+            <StudentProfile user={user} />
+          ))}
       </SimpleGrid>
     </div>
   );
